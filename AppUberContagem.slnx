@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="AppUberContagem/AppUberContagem.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>

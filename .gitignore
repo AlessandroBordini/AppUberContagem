@@ -1,0 +1,119 @@
+## .NET MAUI / Visual Studio
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.rsuser
+*.sln.docstates
+*.VC.db
+*.VC.VC.opendb
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# VS Code (keep shared settings if you add them later)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Publish / packaging
+*.appx
+*.appxbundle
+*.appxupload
+*.msix
+*.msixbundle
+publish/
+PublishProfiles/*.pubxml.user
+
+# Android
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+local.properties
+*.jks
+*.keystore
+!debug.keystore
+
+# iOS / Mac Catalyst
+*.ipa
+*.dSYM/
+*.mobileprovision
+*.xcuserstate
+**/xcuserdata/
+DerivedData/
+*.mode1v3
+*.mode2v3
+*.pbxuser
+!default.pbxuser
+
+# Windows
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.appx
+*.appxbundle
+
+# Test / coverage
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+coverage*
+TestResults/
+
+# OS junk
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Secrets / local env (never commit)
+*.pfx
+*.p12
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+secrets.json
+
+# Cursor / AI local
+.cursor/
+.claude/
+
+# Misc
+*.log
+*.tmp
+*.temp
+*.cache
+*~
+*.swp
+*.bak

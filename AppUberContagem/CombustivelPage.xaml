@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
+             xmlns:services="clr-namespace:AppUberContagem.Services"
+             x:Class="AppUberContagem.CombustivelPage"
+             Title="Combustível">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- Área de Configuração -->
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20" Spacing="15">
+                <Label Text="⛽ Configuração" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+                <Label Text="Consumo na Gasolina (Km/L)" FontAttributes="Bold"/>
+                <Entry x:Name="txtKmGasolina" Placeholder="Ex.: 12,5" Keyboard="Numeric"/>
+
+                <Label Text="Consumo no Álcool (Km/L)" FontAttributes="Bold"/>
+                <Entry x:Name="txtKmAlcool" Placeholder="Ex.: 8,7" Keyboard="Numeric"/>
+
+                <Label Text="Preço do litro da Gasolina" FontAttributes="Bold"/>
+                <Entry x:Name="txtPrecoGasolina" Placeholder="Ex.: 6,39" Keyboard="Numeric"/>
+
+                <Label Text="Preço do litro do Álcool" FontAttributes="Bold"/>
+                <Entry x:Name="txtPrecoAlcool" Placeholder="Ex.: 4,49" Keyboard="Numeric"/>
+
+                <Label Text="Combustível em uso" FontAttributes="Bold"/>
+                <HorizontalStackLayout Spacing="30">
+                    <RadioButton x:Name="rbGasolina" Content="Gasolina" GroupName="Combustivel" IsChecked="True"/>
+                    <RadioButton x:Name="rbAlcool" Content="Álcool" GroupName="Combustivel"/>
+                </HorizontalStackLayout>
+
+                <Button x:Name="btnSalvar" Text="Salvar Configuração" Clicked="BtnSalvar_Clicked"/>
+
+                <Button x:Name="btnLimpar" Text="Limpar Tudo" BackgroundColor="#DC3545" TextColor="White" Clicked="BtnLimpar_Clicked"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Banner AdMob fixo na parte inferior -->
+        <admob:BannerAd Grid.Row="1"
+                        x:Name="BottomBanner"
+                        AdUnitId="{x:Static services:AdMobIds.BannerAdUnitId}"
+                        AdSize="Banner"
+                        HorizontalOptions="Fill"
+                        OnAdFailedToLoad="OnBannerFailedToLoad" />
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppUberContagem.SplashPage"
+             BackgroundColor="#0F2B2B"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+
+        <VerticalStackLayout Spacing="20" HorizontalOptions="Center" VerticalOptions="Center">
+
+            <!-- 
+                ESPAÇO PARA A SUA IMAGEM DO LOGO:
+                1. Adicione a imagem na pasta 'Resources/Images' (ex: logo_johnnyfox.png)
+                2. Atualize o Source abaixo com o nome exato do arquivo
+            -->
+            <Image 
+                Source="logo.png"
+                Aspect="AspectFit"
+                WidthRequest="180"
+                HeightRequest="180"
+                HorizontalOptions="Center"/>
+
+            <!-- Nome da Empresa -->
+            <Label 
+                Text="JOHNNYFOX"
+                FontSize="16"
+                FontAttributes="Bold"
+                TextColor="#888888"
+                CharacterSpacing="4"
+                HorizontalOptions="Center"/>
+
+            <!-- Nome Principal do App -->
+            <Label 
+                Text="Calculadora de Corridas"
+                FontSize="36"
+                FontAttributes="Bold"
+                TextColor="White"
+                HorizontalOptions="Center"/>
+
+            <!-- Subtítulo descritivo -->
+            <Label 
+                Text="Calculadora de Lucro de Corridas"
+                FontSize="14"
+                TextColor="#AAAAAA"
+                HorizontalOptions="Center"/>
+
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>
