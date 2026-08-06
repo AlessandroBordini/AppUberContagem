@@ -15,7 +15,18 @@ public partial class CombustivelPage : ContentPage
     {
         base.OnAppearing();
         CarregarConfiguracoes();
-        MostrarAnuncioTelaCheia();
+
+        // Verifica se o usuário é assinante Premium
+        bool isPremium = Preferences.Default.Get("IsPremium", false);
+
+        // Controla a visibilidade do banner inferior
+        BottomBanner.IsVisible = !isPremium;
+
+        // Se não for premium, exibe o anúncio de tela cheia
+        if (!isPremium)
+        {
+            MostrarAnuncioTelaCheia();
+        }
     }
 
     private void MostrarAnuncioTelaCheia()

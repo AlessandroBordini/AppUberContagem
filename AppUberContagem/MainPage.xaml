@@ -27,11 +27,17 @@
 
                 <BoxView HeightRequest="1" Color="Gray" Margin="0,10"/>
 
-                <Label Text="📊 Comparativo por Cenário" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,5,0,5"/>
+                <Label Text="📊 Comparativo por Cenário" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,5,0,0"/>
+
+                <!-- Aviso visual de que é clicável -->
+                <Label Text="👆 Toque em um cenário abaixo para aceitar e salvar a corrida" FontSize="13" TextColor="Gray" FontAttributes="Italic" HorizontalOptions="Center" Margin="0,0,0,5"/>
 
                 <!-- Cenário Urbano -->
                 <VerticalStackLayout Spacing="5" BackgroundColor="#10000000" Padding="12">
-                    <Label Text="🏙️ Urbano (Padrão)" FontAttributes="Bold"/>
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCenarioUrbanoTapped" />
+                    </VerticalStackLayout.GestureRecognizers>
+                    <Label Text="✅ 🏙️ Urbano (Padrão)" FontAttributes="Bold"/>
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto">
                         <Label Grid.Row="0" Grid.Column="0" Text="Litros gastos:"/>
                         <Label Grid.Row="0" Grid.Column="1" x:Name="lblLitrosUrbano" Text="0,00 L" HorizontalOptions="End"/>
@@ -46,7 +52,10 @@
 
                 <!-- Cenário Misto -->
                 <VerticalStackLayout Spacing="5" BackgroundColor="#10000000" Padding="12" Margin="0,5,0,0">
-                    <Label Text="🛣️ Misto (Avenidas/Fluido)" FontAttributes="Bold"/>
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCenarioMistoTapped" />
+                    </VerticalStackLayout.GestureRecognizers>
+                    <Label Text="✅ 🛣️ Misto (Avenidas/Fluido)" FontAttributes="Bold"/>
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto">
                         <Label Grid.Row="0" Grid.Column="0" Text="Litros gastos:"/>
                         <Label Grid.Row="0" Grid.Column="1" x:Name="lblLitrosMisto" Text="0,00 L" HorizontalOptions="End"/>
@@ -61,7 +70,10 @@
 
                 <!-- Cenário Rodoviário -->
                 <VerticalStackLayout Spacing="5" BackgroundColor="#10000000" Padding="12" Margin="0,5,0,0">
-                    <Label Text="🛤️ Rodoviário (Estrada)" FontAttributes="Bold"/>
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCenarioRodoviarioTapped" />
+                    </VerticalStackLayout.GestureRecognizers>
+                    <Label Text="✅ 🛤️ Rodoviário (Estrada)" FontAttributes="Bold"/>
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto">
                         <Label Grid.Row="0" Grid.Column="0" Text="Litros gastos:"/>
                         <Label Grid.Row="0" Grid.Column="1" x:Name="lblLitrosRodoviario" Text="0,00 L" HorizontalOptions="End"/>
@@ -77,7 +89,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Banner AdMob fixo na parte inferior (INTACTO) -->
+        <!-- Banner AdMob fixo na parte inferior -->
         <admob:BannerAd Grid.Row="1"
                         x:Name="BottomBanner"
                         AdUnitId="{x:Static services:AdMobIds.BannerAdUnitId}"

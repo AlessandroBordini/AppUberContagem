@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppUberContagem.PremiumPage"
+             Title="Versão Premium">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Cabeçalho -->
+            <Label Text="Desbloqueie o Potencial Máximo!" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   HorizontalTextAlignment="Center" />
+
+            <Label Text="Torne-se Premium e tenha acesso a ferramentas exclusivas para motoristas." 
+                   FontSize="16" 
+                   TextColor="Gray"
+                   HorizontalOptions="Center" 
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Lista de Funcionalidades Extras -->
+            <Frame BorderColor="LightGray" CornerRadius="10" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="✨ Benefícios Inclusos:" FontAttributes="Bold" FontSize="18" />
+
+                    <Label Text="✔️ Remoção total de anúncios do aplicativo" FontSize="15" />
+                    <Label Text="✔️ Relatórios avançados de ganhos diários" FontSize="15" />
+                    <Label Text="✔️ Filtro exclusivo de melhores horários" FontSize="15" />
+                    <Label Text="✔️ Pagamento único (Acesso Vitalício)" FontSize="15" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Indicador de Carregamento (Gira quando estiver processando) -->
+            <ActivityIndicator x:Name="IndicadorCarregamento" IsRunning="False" IsVisible="False" Color="Blue" />
+
+            <!-- Botão de Compra -->
+            <Button x:Name="BtnComprar"
+                    Text="Comprar Premium (R$ 14,90)"
+                    BackgroundColor="#27AE60"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="8"
+                    HeightRequest="55"
+                    Clicked="OnComprarClicked" />
+
+            <!-- Mensagem de Sucesso (Fica escondida até o usuário comprar) -->
+            <Label x:Name="LblSucesso"
+                   Text="🎉 Você já é um usuário Premium!"
+                   TextColor="#27AE60"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   IsVisible="False" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

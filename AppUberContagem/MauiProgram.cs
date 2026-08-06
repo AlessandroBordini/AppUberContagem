@@ -23,6 +23,7 @@ namespace AppUberContagem
             AdConfig.DefaultBannerAdUnitId = AdMobIds.BannerAdUnitId;
 
             builder.Services.AddSingleton<InterstitialAdManager>();
+            builder.Services.AddSingleton<DatabaseService>(); // <-- Banco de dados registrado aqui!
 
 #if DEBUG
             // Routes all ad requests to Google's safe test creatives.

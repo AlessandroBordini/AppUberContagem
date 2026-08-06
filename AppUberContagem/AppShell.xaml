@@ -6,15 +6,21 @@
     xmlns:local="clr-namespace:AppUberContagem"
     Title="AppUberContagem">
 
-    <!-- Mudamos de TabBar para FlyoutItems -->
-    <!-- Isso remove as abas de baixo e libera o rodapé -->
-
     <FlyoutItem Title="Corrida" Route="MainPage">
         <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Combustível" Route="CombustivelPage">
         <ShellContent ContentTemplate="{DataTemplate local:CombustivelPage}" />
+    </FlyoutItem>
+
+    <!-- Relatório Financeiro gerenciado via código para alternar o bloqueio -->
+    <FlyoutItem x:Name="itemRelatorios" Title="🔒 Relatório Financeiro (PRO)" Route="RelatoriosPage" Icon="lock_icon.png">
+        <ShellContent ContentTemplate="{DataTemplate local:RelatoriosPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Seja Premium" Route="PremiumPage">
+        <ShellContent ContentTemplate="{DataTemplate local:PremiumPage}" />
     </FlyoutItem>
 
 </Shell>

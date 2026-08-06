@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:AppUberContagem"
+             x:Class="AppUberContagem.RelatoriosPage"
+             Title="Relatório Financeiro">
+
+    <ContentPage.Resources>
+        <!-- Registra o conversor de cores para pintar Ganhos (Verde) e Gastos (Vermelho) -->
+        <local:MovimentacaoColorConverter x:Key="ColorConverter" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="📊 Fechamento de Caixa" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,5"/>
+
+            <!-- Cards de Resumo -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+
+                <!-- Card Ganhos -->
+                <VerticalStackLayout Grid.Column="0" BackgroundColor="#E8F5E9" Padding="10" Spacing="5">
+                    <Label Text="Ganhos" FontSize="12" TextColor="Green" FontAttributes="Bold"/>
+                    <Label x:Name="lblTotalGanhos" Text="R$ 0,00" FontSize="16" FontAttributes="Bold" TextColor="Green"/>
+                </VerticalStackLayout>
+
+                <!-- Card Gastos -->
+                <VerticalStackLayout Grid.Column="1" BackgroundColor="#FFEBEE" Padding="10" Spacing="5">
+                    <Label Text="Gastos" FontSize="12" TextColor="Red" FontAttributes="Bold"/>
+                    <Label x:Name="lblTotalGastos" Text="R$ 0,00" FontSize="16" FontAttributes="Bold" TextColor="Red"/>
+                </VerticalStackLayout>
+
+                <!-- Card Lucro Líquido -->
+                <VerticalStackLayout Grid.Column="2" BackgroundColor="#E3F2FD" Padding="10" Spacing="5">
+                    <Label Text="Líquido" FontSize="12" TextColor="Blue" FontAttributes="Bold"/>
+                    <Label x:Name="lblLucroLiquido" Text="R$ 0,00" FontSize="16" FontAttributes="Bold" TextColor="Blue"/>
+                </VerticalStackLayout>
+            </Grid>
+
+            <BoxView HeightRequest="1" Color="Gray" Margin="0,10"/>
+
+            <Label Text="Histórico de Lançamentos" FontSize="18" FontAttributes="Bold"/>
+
+            <!-- Lista de Lançamentos do Banco de Dados com Cores Dinâmicas -->
+            <CollectionView x:Name="cvRegistros" HeightRequest="400">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="12" Margin="0,5" BackgroundColor="#F9F9F9">
+                            <VerticalStackLayout Spacing="2">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="{Binding TipoMovimentacao}" FontAttributes="Bold" 
+                                           TextColor="{Binding TipoMovimentacao, Converter={StaticResource ColorConverter}}"/>
+                                    <Label Text="•" TextColor="Gray"/>
+                                    <Label Text="{Binding Categoria}" FontAttributes="Bold"/>
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Descricao}" FontSize="13" TextColor="DimGray"/>
+                                <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
+                                    <Label Grid.Column="0" Text="{Binding Data, StringFormat='Data: {0:dd/MM/yyyy}'}" FontSize="12" TextColor="Gray" VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding Valor, StringFormat='R$ {0:F2}'}" FontSize="14" FontAttributes="Bold" 
+                                           TextColor="{Binding TipoMovimentacao, Converter={StaticResource ColorConverter}}" VerticalOptions="Center"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Atualizar Relatório" BackgroundColor="#007BFF" TextColor="White" Clicked="BtnAtualizar_Clicked" Margin="0,10,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

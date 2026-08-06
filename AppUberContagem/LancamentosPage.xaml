@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppUberContagem.LancamentosPage"
+             Title="Novo Lançamento">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="✍️ Adicionar Movimentação" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,10"/>
+
+            <Label Text="Tipo de Lançamento" FontAttributes="Bold"/>
+            <Picker x:Name="pckTipo" Title="Selecione..." BackgroundColor="#05000000">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Gasto</x:String>
+                        <x:String>Ganho</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Label Text="Categoria" FontAttributes="Bold"/>
+            <Picker x:Name="pckCategoria" Title="Selecione..." BackgroundColor="#05000000">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Combustível</x:String>
+                        <x:String>Manutenção Preventiva (Óleo, Pneus)</x:String>
+                        <x:String>Seguro / IPVA</x:String>
+                        <x:String>Taxas / Pedágios</x:String>
+                        <x:String>Ganhos Manuais / Particulares</x:String>
+                        <x:String>Alimentação</x:String>
+                        <x:String>Outros</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Label Text="Descrição (Opcional)" FontAttributes="Bold"/>
+            <Entry x:Name="txtDescricao" Placeholder="Ex: Gasolina do Mobi, Pedágio Indaiatuba..."/>
+
+            <Label Text="Valor (R$)" FontAttributes="Bold"/>
+            <Entry x:Name="txtValor" Placeholder="Ex: 150,00" Keyboard="Numeric"/>
+
+            <Label Text="Data da Movimentação" FontAttributes="Bold"/>
+            <DatePicker x:Name="dtpData" Format="dd/MM/yyyy"/>
+
+            <Button Text="Salvar Lançamento" BackgroundColor="#28A745" TextColor="White" FontAttributes="Bold" Clicked="BtnSalvar_Clicked" Margin="0,15,0,0" HeightRequest="50"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
