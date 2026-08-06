@@ -14,13 +14,13 @@
                 <Label Text="🚗 Corrida" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"/>
 
                 <Label Text="Preço da corrida" FontAttributes="Bold"/>
-                <Entry x:Name="txtPrecoCorrida" Placeholder="Ex.: 35,50" Keyboard="Numeric"/>
+                <Entry x:Name="txtPrecoCorrida" Placeholder="Ex.: 35,50" Keyboard="Telephone"/>
 
                 <Label Text="Distância até o passageiro (Km)" FontAttributes="Bold"/>
-                <Entry x:Name="txtDistanciaAtePassageiro" Placeholder="Ex.: 2,5" Keyboard="Numeric"/>
+                <Entry x:Name="txtDistanciaAtePassageiro" Placeholder="Ex.: 2,5" Keyboard="Telephone"/>
 
                 <Label Text="Distância da corrida (Km)" FontAttributes="Bold"/>
-                <Entry x:Name="txtDistancia" Placeholder="Ex.: 12,4" Keyboard="Numeric"/>
+                <Entry x:Name="txtDistancia" Placeholder="Ex.: 12,4" Keyboard="Telephone"/>
 
                 <Button x:Name="btnCalcular" Text="Calcular" Clicked="BtnCalcular_Clicked"/>
                 <Button x:Name="btnLimpar" Text="Limpar" Background="#DC3545" TextColor="White" Clicked="BtnLimpar_Clicked"/>

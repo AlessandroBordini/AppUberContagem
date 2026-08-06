@@ -2,38 +2,52 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppUberContagem.PremiumPage"
-             Title="Versão Premium">
+             Title="Versão Premium"
+             BackgroundColor="{AppThemeBinding Light='#F8F9FA', Dark='#121212'}">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+        <VerticalStackLayout Padding="24" Spacing="20">
 
             <!-- Cabeçalho -->
-            <Label Text="Desbloqueie o Potencial Máximo!" 
-                   FontSize="24" 
-                   FontAttributes="Bold" 
-                   HorizontalOptions="Center" 
-                   HorizontalTextAlignment="Center" />
-
-            <Label Text="Torne-se Premium e tenha acesso a ferramentas exclusivas para motoristas." 
-                   FontSize="16" 
-                   TextColor="Gray"
-                   HorizontalOptions="Center" 
-                   HorizontalTextAlignment="Center" />
+            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="⭐" 
+                       FontSize="42" 
+                       HorizontalOptions="Center" />
+                <Label Text="Desbloqueie o Potencial Máximo!" 
+                       FontSize="22" 
+                       FontAttributes="Bold" 
+                       HorizontalTextAlignment="Center" />
+                <Label Text="Torne-se Premium e tenha acesso a ferramentas exclusivas para motoristas." 
+                       FontSize="14" 
+                       TextColor="Gray"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
 
             <!-- Lista de Funcionalidades Extras -->
-            <Frame BorderColor="LightGray" CornerRadius="10" Padding="15" HasShadow="True">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="✨ Benefícios Inclusos:" FontAttributes="Bold" FontSize="18" />
+            <Frame BorderColor="#E0E0E0" 
+                   CornerRadius="12" 
+                   Padding="16" 
+                   HasShadow="True"
+                   BackgroundColor="{AppThemeBinding Light='White', Dark='#1E1E1E'}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="✨ Benefícios Inclusos:" 
+                           FontAttributes="Bold" 
+                           FontSize="16" />
 
-                    <Label Text="✔️ Remoção total de anúncios do aplicativo" FontSize="15" />
-                    <Label Text="✔️ Relatórios avançados de ganhos diários" FontSize="15" />
-                    <Label Text="✔️ Filtro exclusivo de melhores horários" FontSize="15" />
-                    <Label Text="✔️ Pagamento único (Acesso Vitalício)" FontSize="15" />
+                    <Label Text="✔️ Remoção total de anúncios do aplicativo" FontSize="14" />
+                    <Label Text="✔️ Relatórios avançados de ganhos diários" FontSize="14" />
+                    <Label Text="✔️ Filtro exclusivo de melhores horários" FontSize="14" />
+                    <Label Text="✔️ Pagamento único (Acesso Vitalício)" FontSize="14" />
                 </VerticalStackLayout>
             </Frame>
 
             <!-- Indicador de Carregamento (Gira quando estiver processando) -->
-            <ActivityIndicator x:Name="IndicadorCarregamento" IsRunning="False" IsVisible="False" Color="Blue" />
+            <ActivityIndicator x:Name="IndicadorCarregamento" 
+                               IsRunning="False" 
+                               IsVisible="False" 
+                               Color="#27AE60" 
+                               HeightRequest="40"
+                               HorizontalOptions="Center" />
 
             <!-- Botão de Compra -->
             <Button x:Name="BtnComprar"
@@ -49,9 +63,10 @@
             <Label x:Name="LblSucesso"
                    Text="🎉 Você já é um usuário Premium!"
                    TextColor="#27AE60"
-                   FontSize="18"
+                   FontSize="16"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
                    IsVisible="False" />
 
         </VerticalStackLayout>

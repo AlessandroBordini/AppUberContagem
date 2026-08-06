@@ -13,23 +13,23 @@
             <VerticalStackLayout Padding="20" Spacing="15">
                 <Label Text="⛽ Configuração" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"/>
 
-                <Label Text="Consumo na Gasolina (Km/L)" FontAttributes="Bold"/>
-                <Entry x:Name="txtKmGasolina" Placeholder="Ex.: 12,5" Keyboard="Numeric"/>
-
-                <Label Text="Consumo no Álcool (Km/L)" FontAttributes="Bold"/>
-                <Entry x:Name="txtKmAlcool" Placeholder="Ex.: 8,7" Keyboard="Numeric"/>
-
-                <Label Text="Preço do litro da Gasolina" FontAttributes="Bold"/>
-                <Entry x:Name="txtPrecoGasolina" Placeholder="Ex.: 6,39" Keyboard="Numeric"/>
-
-                <Label Text="Preço do litro do Álcool" FontAttributes="Bold"/>
-                <Entry x:Name="txtPrecoAlcool" Placeholder="Ex.: 4,49" Keyboard="Numeric"/>
-
                 <Label Text="Combustível em uso" FontAttributes="Bold"/>
                 <HorizontalStackLayout Spacing="30">
-                    <RadioButton x:Name="rbGasolina" Content="Gasolina" GroupName="Combustivel" IsChecked="True"/>
-                    <RadioButton x:Name="rbAlcool" Content="Álcool" GroupName="Combustivel"/>
+                    <RadioButton x:Name="rbGasolina" Content="Gasolina" GroupName="Combustivel" IsChecked="True" CheckedChanged="RbCombustivel_CheckedChanged"/>
+                    <RadioButton x:Name="rbAlcool" Content="Álcool" GroupName="Combustivel" CheckedChanged="RbCombustivel_CheckedChanged"/>
                 </HorizontalStackLayout>
+
+                <Label Text="Consumo na Gasolina (Km/L)" FontAttributes="Bold"/>
+                <Entry x:Name="txtKmGasolina" Placeholder="Ex.: 12,5" Keyboard="Telephone"/>
+
+                <Label Text="Consumo no Álcool (Km/L)" FontAttributes="Bold"/>
+                <Entry x:Name="txtKmAlcool" Placeholder="Ex.: 8,7" Keyboard="Telephone" IsEnabled="False"/>
+
+                <Label Text="Preço do litro da Gasolina" FontAttributes="Bold"/>
+                <Entry x:Name="txtPrecoGasolina" Placeholder="Ex.: 6,39" Keyboard="Telephone"/>
+
+                <Label Text="Preço do litro do Álcool" FontAttributes="Bold"/>
+                <Entry x:Name="txtPrecoAlcool" Placeholder="Ex.: 4,49" Keyboard="Telephone" IsEnabled="False"/>
 
                 <Button x:Name="btnSalvar" Text="Salvar Configuração" Clicked="BtnSalvar_Clicked"/>
 
@@ -45,5 +45,4 @@
                         HorizontalOptions="Fill"
                         OnAdFailedToLoad="OnBannerFailedToLoad" />
     </Grid>
-
 </ContentPage>
