@@ -1,5 +1,6 @@
 using Microsoft.Maui.Storage;
 using System.Globalization;
+using AppUberContagem.Helpers;
 
 namespace AppUberContagem;
 
@@ -13,7 +14,8 @@ public partial class LancamentosPage : ContentPage
 
     private async void BtnSalvar_Clicked(object sender, EventArgs e)
     {
-        bool isPremium = Preferences.Default.Get("IsPremium", false);
+        // Validação de segurança Premium centralizada
+        bool isPremium = await PremiumHelper.IsPremiumAsync();
         if (!isPremium)
         {
             bool querAssinar = await DisplayAlert("Função Premium ⭐", "O registro financeiro manual é exclusivo para assinantes. Deseja conhecer?", "Sim", "Agora não");
@@ -41,9 +43,9 @@ public partial class LancamentosPage : ContentPage
 
         var novoRegistro = new Models.RegistroFinanceiro
         {
-            Data = dtpData.Date ?? DateTime.Now, // <--- Altere aqui
-            TipoMovimentacao = pckTipo.SelectedItem.ToString(),
-            Categoria = pckCategoria.SelectedItem.ToString(),
+            Data = dtpData.Date ?? DateTime.Now, // <--- Resolvido com o operador de nulabilidade
+            TipoMovimentacao = pckTipo.SelectedItem.ToString() ?? "Ganho",
+            Categoria = pckCategoria.SelectedItem.ToString() ?? "Outros",
             Descricao = txtDescricao.Text ?? "Sem descrição",
             Valor = valorReal
         };

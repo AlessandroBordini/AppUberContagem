@@ -26,9 +26,14 @@ public partial class PremiumPage : ContentPage
     private async Task ChecarSeJaEPremium()
     {
         string salvoNoCelular = await SecureStorage.Default.GetAsync(ChavePremium);
+
+        // Verifica se tem no cofre seguro OU se o app antigo já havia marcado
         if (salvoNoCelular == "sim" || Preferences.Default.Get("IsPremium", false))
         {
+            // Sincroniza ambos para garantir que todas as telas reconheçam
+            await SecureStorage.Default.SetAsync(ChavePremium, "sim");
             Preferences.Default.Set("IsPremium", true);
+
             AtualizarMenuPrincipal();
             MudarTelaParaPremium();
         }
@@ -39,8 +44,14 @@ public partial class PremiumPage : ContentPage
             {
                 await SecureStorage.Default.SetAsync(ChavePremium, "sim");
                 Preferences.Default.Set("IsPremium", true);
+
                 AtualizarMenuPrincipal();
                 MudarTelaParaPremium();
+            }
+            else
+            {
+                SecureStorage.Default.Remove(ChavePremium);
+                Preferences.Default.Set("IsPremium", false);
             }
         }
     }
@@ -62,8 +73,10 @@ public partial class PremiumPage : ContentPage
             bool compraSucesso = await _billingService.BuyPremiumAsync();
             if (compraSucesso)
             {
+                // Salva em ambos para liberar as telas imediatamente
                 await SecureStorage.Default.SetAsync(ChavePremium, "sim");
                 Preferences.Default.Set("IsPremium", true);
+
                 AtualizarMenuPrincipal();
                 MudarTelaParaPremium();
             }

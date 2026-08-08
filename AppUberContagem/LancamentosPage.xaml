@@ -10,7 +10,7 @@
             <Label Text="✍️ Adicionar Movimentação" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,10"/>
 
             <Label Text="Tipo de Lançamento" FontAttributes="Bold"/>
-            <Picker x:Name="pckTipo" Title="Selecione..." BackgroundColor="#05000000">
+            <Picker x:Name="pckTipo" Title="Selecione..." BackgroundColor="#F1F3F5">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>Gasto</x:String>
@@ -20,7 +20,7 @@
             </Picker>
 
             <Label Text="Categoria" FontAttributes="Bold"/>
-            <Picker x:Name="pckCategoria" Title="Selecione..." BackgroundColor="#05000000">
+            <Picker x:Name="pckCategoria" Title="Selecione..." BackgroundColor="#F1F3F5">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>Combustível</x:String>
@@ -43,7 +43,14 @@
             <Label Text="Data da Movimentação" FontAttributes="Bold"/>
             <DatePicker x:Name="dtpData" Format="dd/MM/yyyy"/>
 
-            <Button Text="Salvar Lançamento" BackgroundColor="#28A745" TextColor="White" FontAttributes="Bold" Clicked="BtnSalvar_Clicked" Margin="0,15,0,0" HeightRequest="50"/>
+            <Button Text="Salvar Lançamento" 
+                    BackgroundColor="#28A745" 
+                    TextColor="White" 
+                    FontAttributes="Bold" 
+                    CornerRadius="8" 
+                    HeightRequest="50" 
+                    Clicked="BtnSalvar_Clicked" 
+                    Margin="0,15,0,0"/>
 
         </VerticalStackLayout>
     </ScrollView>

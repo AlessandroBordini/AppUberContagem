@@ -1,6 +1,7 @@
 ﻿using Plugin.AdMob;
 using Microsoft.Maui.Storage;
 using System.Globalization;
+using AppUberContagem.Helpers;
 
 namespace AppUberContagem;
 
@@ -18,12 +19,12 @@ public partial class MainPage : ContentPage
         InitializeComponent();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        // Verifica se o usuário é Premium e oculta o anúncio se for verdadeiro
-        bool isPremium = Preferences.Default.Get("IsPremium", false);
+        // Utiliza o PremiumHelper seguro
+        bool isPremium = await PremiumHelper.IsPremiumAsync();
         BottomBanner.IsVisible = !isPremium;
 
         // Verifica se precisa exibir o aviso de combustível
@@ -200,7 +201,7 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        bool isPremium = Preferences.Default.Get("IsPremium", false);
+        bool isPremium = await PremiumHelper.IsPremiumAsync();
 
         if (!isPremium)
         {

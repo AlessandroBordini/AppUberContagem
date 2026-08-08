@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
              xmlns:services="clr-namespace:AppUberContagem.Services"
-             x:Class="AppUberContagem.MainPage">
+             x:Class="AppUberContagem.MainPage"
+             Title="Principal">
 
     <Grid RowDefinitions="*,Auto" x:Name="MainGrid">
 
@@ -44,8 +45,8 @@
                 <Label Text="Distância da corrida (Km)" FontAttributes="Bold"/>
                 <Entry x:Name="txtDistancia" Placeholder="Ex.: 12,4" Keyboard="Telephone"/>
 
-                <Button x:Name="btnCalcular" Text="Calcular" Clicked="BtnCalcular_Clicked"/>
-                <Button x:Name="btnLimpar" Text="Limpar" Background="#DC3545" TextColor="White" Clicked="BtnLimpar_Clicked"/>
+                <Button x:Name="btnCalcular" Text="Calcular" BackgroundColor="#007BFF" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50" Clicked="BtnCalcular_Clicked"/>
+                <Button x:Name="btnLimpar" Text="Limpar" BackgroundColor="#DC3545" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50" Clicked="BtnLimpar_Clicked"/>
 
                 <BoxView HeightRequest="1" Color="Gray" Margin="0,10"/>
 
@@ -55,7 +56,7 @@
                 <Label Text="Toque em um cenário abaixo para aceitar e salvar a corrida" FontSize="13" TextColor="Gray" FontAttributes="Italic" HorizontalOptions="Center" Margin="0,0,0,5"/>
 
                 <!-- Cenário Urbano -->
-                <VerticalStackLayout Spacing="5" BackgroundColor="#10000000" Padding="12">
+                <VerticalStackLayout Spacing="5" BackgroundColor="#F1F3F5" Padding="12">
                     <VerticalStackLayout.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnCenarioUrbanoTapped" />
                     </VerticalStackLayout.GestureRecognizers>
@@ -73,7 +74,7 @@
                 </VerticalStackLayout>
 
                 <!-- Cenário Misto -->
-                <VerticalStackLayout Spacing="5" BackgroundColor="#10000000" Padding="12" Margin="0,5,0,0">
+                <VerticalStackLayout Spacing="5" BackgroundColor="#F1F3F5" Padding="12" Margin="0,5,0,0">
                     <VerticalStackLayout.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnCenarioMistoTapped" />
                     </VerticalStackLayout.GestureRecognizers>
@@ -91,7 +92,7 @@
                 </VerticalStackLayout>
 
                 <!-- Cenário Rodoviário -->
-                <VerticalStackLayout Spacing="5" BackgroundColor="#10000000" Padding="12" Margin="0,5,0,0">
+                <VerticalStackLayout Spacing="5" BackgroundColor="#F1F3F5" Padding="12" Margin="0,5,0,0">
                     <VerticalStackLayout.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnCenarioRodoviarioTapped" />
                     </VerticalStackLayout.GestureRecognizers>

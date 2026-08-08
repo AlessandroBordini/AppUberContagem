@@ -1,6 +1,7 @@
 using Microsoft.Maui.Storage;
 using Plugin.AdMob;
 using AppUberContagem.Services;
+using AppUberContagem.Helpers;
 
 namespace AppUberContagem;
 
@@ -11,13 +12,13 @@ public partial class CombustivelPage : ContentPage
         InitializeComponent();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         CarregarConfiguracoes();
 
-        // Verifica se o usuário é assinante Premium
-        bool isPremium = Preferences.Default.Get("IsPremium", false);
+        // Utiliza o PremiumHelper seguro em vez de checagem solta
+        bool isPremium = await PremiumHelper.IsPremiumAsync();
 
         // Controla a visibilidade do banner inferior
         BottomBanner.IsVisible = !isPremium;

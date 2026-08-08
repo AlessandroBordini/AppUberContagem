@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Obfuscator>
+	<Var name="InPath" value=".\bin\Release\net9.0-android\publish" />
+	<Var name="OutPath" value=".\obfuscated" />
+	<Var name="KeepPublicApi" value="false" />
+	<Var name="HidePrivateApi" value="true" />
+	<Var name="RenameProperties" value="true" />
+	<Var name="RenameEvents" value="true" />
+	<Var name="RenameFields" value="true" />
+	<Var name="UseUnicodeNames" value="true" />
+
+	<!-- Mantém Models seguros para o XAML não quebrar -->
+	<Module file="$(InPath)\AppUberContagem.dll">
+		<SkipType name="AppUberContagem.Models.*" />
+		<SkipType name="AppUberContagem.ViewModels.*" />
+	</Module>
+</Obfuscator>

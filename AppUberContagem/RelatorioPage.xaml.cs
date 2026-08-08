@@ -4,8 +4,8 @@ using PdfSharpCore.Pdf;
 using PdfSharpCore.Fonts;
 using System.Globalization;
 using System.IO;
+using AppUberContagem.Helpers;
 
-// Apelidos para evitar conflito entre as cores do MAUI e do PDF
 using MauiColor = Microsoft.Maui.Graphics.Color;
 using MauiColors = Microsoft.Maui.Graphics.Colors;
 using Share = Microsoft.Maui.ApplicationModel.DataTransfer.Share;
@@ -17,8 +17,6 @@ namespace AppUberContagem;
 public partial class RelatorioPage : ContentPage
 {
     private bool _isRedirecting = false;
-
-    // VARIÁVEL NOVA: Controla se a fonte já foi carregada sem bugar o Android
     private static bool _fontResolverConfigurado = false;
 
     private List<Models.RegistroFinanceiro> _listaFiltrada = new();
@@ -29,7 +27,6 @@ public partial class RelatorioPage : ContentPage
     public RelatorioPage()
     {
         InitializeComponent();
-
         dtpInicio.Date = DateTime.Today;
         dtpFim.Date = DateTime.Today;
     }
@@ -37,53 +34,28 @@ public partial class RelatorioPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
         if (_isRedirecting) return;
 
-        bool isPremium = Preferences.Default.Get("IsPremium", false);
-
+        bool isPremium = await PremiumHelper.IsPremiumAsync();
         if (!isPremium)
         {
             _isRedirecting = true;
-
-            bool querAssinar = await DisplayAlert(
-                "Função Premium ⭐",
-                "O relatório financeiro detalhado é uma exclusividade para assinantes Premium. Deseja conhecer os benefícios?",
-                "Sim",
-                "Agora não"
-            );
-
-            if (querAssinar)
-            {
-                await Navigation.PushAsync(new PremiumPage());
-            }
-            else
-            {
-                await Shell.Current.GoToAsync("//MainPage");
-            }
-
+            bool querAssinar = await DisplayAlert("Função Premium ⭐", "O relatório financeiro detalhado é exclusivo Premium.", "Sim", "Agora não");
+            if (querAssinar) await Navigation.PushAsync(new PremiumPage());
+            else await Shell.Current.GoToAsync("//MainPage");
             _isRedirecting = false;
             return;
         }
-
         await CarregarDadosFinanceiros();
     }
 
-    private async void BtnAtualizar_Clicked(object sender, EventArgs e)
-    {
-        bool isPremium = Preferences.Default.Get("IsPremium", false);
-        if (!isPremium) return;
+    private async void BtnAtualizar_Clicked(object sender, EventArgs e) => await CarregarDadosFinanceiros();
 
-        await CarregarDadosFinanceiros();
-    }
-
-    // --- FILTROS RÁPIDOS DE PERÍODO (TELA) ---
     private void DestacarBotaoFiltro(Button botaoAtivo)
     {
         btnHoje.BackgroundColor = MauiColor.FromArgb("#6C757D");
         btnSemana.BackgroundColor = MauiColor.FromArgb("#6C757D");
         btnMes.BackgroundColor = MauiColor.FromArgb("#6C757D");
-
         botaoAtivo.BackgroundColor = MauiColor.FromArgb("#007BFF");
     }
 
@@ -111,12 +83,9 @@ public partial class RelatorioPage : ContentPage
         DestacarBotaoFiltro(btnMes);
     }
 
-    private async void OnDataFiltroChanged(object sender, DateChangedEventArgs e)
-    {
-        await CarregarDadosFinanceiros();
-    }
+    private async void OnDataFiltroChanged(object sender, DateChangedEventArgs e) => await CarregarDadosFinanceiros();
 
-    // --- CADASTRO MANUAL DE LANÇAMENTO ---
+    // --- CADASTRO MANUAL (SEGURO) ---
     private async void BtnNovoLancamento_Clicked(object sender, EventArgs e)
     {
         string tipoEscolha = await DisplayActionSheet("Novo Lançamento", "Cancelar", null, "Ganho (Adição)", "Gasto (Subtração)");
@@ -124,112 +93,68 @@ public partial class RelatorioPage : ContentPage
 
         string tipoMovimentacao = tipoEscolha.Contains("Ganho") ? "Ganho" : "Gasto";
 
-        string descricao = await DisplayPromptAsync("Descrição", "O que é esse lançamento?", placeholder: "Ex: Troca de óleo, Corrida por fora...", accept: "Avançar", cancel: "Cancelar");
+        string descricao = await DisplayPromptAsyncSeguro("Descrição", "O que é esse lançamento?", "Ex: Troca de óleo");
         if (string.IsNullOrWhiteSpace(descricao)) return;
 
-        string valorStr = await DisplayPromptAsync("Valor", "Digite o valor em R$:", placeholder: "Ex: 50,00", keyboard: Keyboard.Telephone, accept: "Avançar", cancel: "Cancelar");
+        string valorStr = await DisplayPromptAsyncSeguro("Valor", "Digite o valor em R$:", "0.00", Keyboard.Telephone);
         if (string.IsNullOrWhiteSpace(valorStr)) return;
 
-        string dataStr = await DisplayPromptAsync("Data", "Data do lançamento (DD/MM/AAAA):", initialValue: DateTime.Today.ToString("dd/MM/yyyy"), accept: "Salvar", cancel: "Cancelar");
+        string dataStr = await DisplayPromptAsyncSeguro("Data", "Data (DD/MM/AAAA):", DateTime.Today.ToString("dd/MM/yyyy"));
         if (string.IsNullOrWhiteSpace(dataStr)) return;
 
         if (!DateTime.TryParseExact(dataStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataLancamento))
         {
-            await DisplayAlert("Erro", "Formato de data inválido. Use o padrão DD/MM/AAAA.", "OK");
+            await DisplayAlert("Erro", "Formato de data inválido.", "OK");
             return;
         }
 
         if (double.TryParse(valorStr.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double valor))
         {
             var dbService = Handler?.MauiContext?.Services.GetService<Services.DatabaseService>();
-            if (dbService == null) return;
-
-            var novoRegistro = new Models.RegistroFinanceiro
-            {
-                TipoMovimentacao = tipoMovimentacao,
-                Categoria = "Manual",
-                Descricao = descricao,
-                Valor = valor,
-                Data = dataLancamento
-            };
-
-            await dbService.SalvarRegistroAsync(novoRegistro);
+            await dbService.SalvarRegistroAsync(new Models.RegistroFinanceiro { TipoMovimentacao = tipoMovimentacao, Categoria = "Manual", Descricao = descricao, Valor = valor, Data = dataLancamento });
             await CarregarDadosFinanceiros();
         }
-        else
-        {
-            await DisplayAlert("Erro", "Valor numérico inválido.", "OK");
-        }
     }
 
-    // --- DELETAR LANÇAMENTO ERRADO ---
-    private async void BtnDeletar_Clicked(object sender, EventArgs e)
-    {
-        if (sender is Button button && button.CommandParameter is int id)
-        {
-            bool confirmar = await DisplayAlert("Excluir Lançamento", "Deseja realmente apagar este registro?", "Sim", "Não");
-            if (confirmar)
-            {
-                var dbService = Handler?.MauiContext?.Services.GetService<Services.DatabaseService>();
-                if (dbService != null)
-                {
-                    await dbService.DeletarRegistroAsync(id);
-                    await CarregarDadosFinanceiros();
-                }
-            }
-        }
-    }
-
-    // --- EXPORTAR RELATÓRIO EM PDF COM DATAS ESPECÍFICAS ---
+    // --- EXPORTAR PDF (SEGURO) ---
     private async void OnExportarPdfClicked(object sender, EventArgs e)
     {
         try
         {
-            // 1. Pergunta a Data Inicial (Já sugere o dia 1º do mês atual)
-            string dataInicioPrompt = await DisplayPromptAsync("Relatório PDF", "Data Inicial (DD/MM/AAAA):", initialValue: new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).ToString("dd/MM/yyyy"), accept: "Avançar", cancel: "Cancelar");
+            string dataInicioPrompt = await DisplayPromptAsyncSeguro("Relatório PDF", "Data Inicial (DD/MM/AAAA):", DateTime.Today.AddDays(-30).ToString("dd/MM/yyyy"));
             if (string.IsNullOrWhiteSpace(dataInicioPrompt)) return;
 
-            if (!DateTime.TryParseExact(dataInicioPrompt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataInicioExport))
-            {
-                await DisplayAlert("Erro", "Formato de data inicial inválido.", "OK");
-                return;
-            }
-
-            // 2. Pergunta a Data Final (Já sugere a data de hoje)
-            string dataFimPrompt = await DisplayPromptAsync("Relatório PDF", "Data Final (DD/MM/AAAA):", initialValue: DateTime.Today.ToString("dd/MM/yyyy"), accept: "Gerar PDF", cancel: "Cancelar");
+            string dataFimPrompt = await DisplayPromptAsyncSeguro("Relatório PDF", "Data Final (DD/MM/AAAA):", DateTime.Today.ToString("dd/MM/yyyy"));
             if (string.IsNullOrWhiteSpace(dataFimPrompt)) return;
 
-            if (!DateTime.TryParseExact(dataFimPrompt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataFimExport))
+            if (!DateTime.TryParseExact(dataInicioPrompt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataInicioExport) ||
+                !DateTime.TryParseExact(dataFimPrompt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataFimExport))
             {
-                await DisplayAlert("Erro", "Formato de data final inválido.", "OK");
+                await DisplayAlert("Erro", "Formato de data inválido.", "OK");
                 return;
             }
 
-            // Ajusta a data final para até 23:59:59 do dia escolhido
             DateTime dataFimAjustada = dataFimExport.Date.AddDays(1).AddSeconds(-1);
 
-            // 3. Busca no banco de dados APENAS os registros desse período escolhido
             var dbService = Handler?.MauiContext?.Services.GetService<Services.DatabaseService>();
             if (dbService == null) return;
 
             var todosRegistros = await dbService.ObterRegistrosAsync();
             var listaPdf = todosRegistros?
                 .Where(r => r.Data >= dataInicioExport.Date && r.Data <= dataFimAjustada)
-                .OrderBy(r => r.Data) // Coloca em ordem cronológica de data
+                .OrderBy(r => r.Data)
                 .ToList();
 
             if (listaPdf == null || !listaPdf.Any())
             {
-                await DisplayAlert("Aviso", $"Não existem corridas ou registros salvos entre {dataInicioPrompt} e {dataFimPrompt}.", "OK");
+                await DisplayAlert("Aviso", "Nenhum registro encontrado no período.", "OK");
                 return;
             }
 
-            // 4. Calcula os totais apenas para as datas que vão para o PDF
             double ganhosPdf = listaPdf.Where(r => r.TipoMovimentacao == "Ganho").Sum(r => r.Valor);
             double gastosPdf = listaPdf.Where(r => r.TipoMovimentacao == "Gasto").Sum(r => r.Valor);
             double lucroPdf = ganhosPdf - gastosPdf;
 
-            // Prepara a Fonte do PDF (Bypass de erro no Android)
             if (!_fontResolverConfigurado)
             {
                 using var stream = await FileSystem.OpenAppPackageFileAsync("OpenSans-Regular.ttf");
@@ -240,7 +165,6 @@ public partial class RelatorioPage : ContentPage
                 _fontResolverConfigurado = true;
             }
 
-            // Nome e Criação do Arquivo PDF
             string nomeArquivo = $"Relatorio_{dataInicioExport:dd-MM}_{dataFimExport:dd-MM}.pdf";
             string caminhoArquivo = Path.Combine(FileSystem.CacheDirectory, nomeArquivo);
 
@@ -259,33 +183,19 @@ public partial class RelatorioPage : ContentPage
 
             gfx.DrawString("AppUberContagem", fontTitulo, XBrushes.DarkGreen, new XPoint(40, yPoint));
             yPoint += 20;
-            gfx.DrawString($"Período impresso: {dataInicioPrompt} até {dataFimPrompt}", fontSub, XBrushes.Gray, new XPoint(40, yPoint));
+            gfx.DrawString($"Período: {dataInicioPrompt} até {dataFimPrompt}", fontSub, XBrushes.Gray, new XPoint(40, yPoint));
             yPoint += 35;
 
-            // Imprime os Valores Resumidos do Período Específico
-            gfx.DrawString("Resumo do Período", fontBold, XBrushes.Black, new XPoint(40, yPoint));
+            gfx.DrawString("Resumo", fontBold, XBrushes.Black, new XPoint(40, yPoint));
             yPoint += 20;
 
-            gfx.DrawString($"Total de Ganhos: R$ {ganhosPdf:F2}", fontNormal, XBrushes.Green, new XPoint(50, yPoint));
+            gfx.DrawString($"Ganhos: R$ {ganhosPdf:F2}", fontNormal, XBrushes.Green, new XPoint(50, yPoint));
             yPoint += 18;
-            gfx.DrawString($"Total de Gastos: R$ {gastosPdf:F2}", fontNormal, XBrushes.Red, new XPoint(50, yPoint));
+            gfx.DrawString($"Gastos: R$ {gastosPdf:F2}", fontNormal, XBrushes.Red, new XPoint(50, yPoint));
             yPoint += 18;
-            gfx.DrawString($"Lucro Líquido: R$ {lucroPdf:F2}", fontBold, XBrushes.Blue, new XPoint(50, yPoint));
+            gfx.DrawString($"Líquido: R$ {lucroPdf:F2}", fontBold, XBrushes.Blue, new XPoint(50, yPoint));
             yPoint += 30;
 
-            gfx.DrawString("Detalhamento dos Lançamentos", fontBold, XBrushes.Black, new XPoint(40, yPoint));
-            yPoint += 20;
-
-            gfx.DrawString("Data", fontBold, XBrushes.Black, new XPoint(40, yPoint));
-            gfx.DrawString("Tipo", fontBold, XBrushes.Black, new XPoint(120, yPoint));
-            gfx.DrawString("Descrição", fontBold, XBrushes.Black, new XPoint(200, yPoint));
-            gfx.DrawString("Valor", fontBold, XBrushes.Black, new XPoint(400, yPoint));
-            yPoint += 15;
-
-            gfx.DrawLine(XPens.Gray, 40, yPoint, 550, yPoint);
-            yPoint += 10;
-
-            // Imprime a Tabela com os dados filtrados
             foreach (var reg in listaPdf)
             {
                 if (yPoint > page.Height - 50)
@@ -296,12 +206,10 @@ public partial class RelatorioPage : ContentPage
                 }
 
                 XBrush corTexto = reg.TipoMovimentacao == "Ganho" ? XBrushes.Green : XBrushes.Red;
-
                 gfx.DrawString(reg.Data.ToString("dd/MM/yyyy"), fontNormal, XBrushes.Black, new XPoint(40, yPoint));
                 gfx.DrawString(reg.TipoMovimentacao, fontNormal, corTexto, new XPoint(120, yPoint));
                 gfx.DrawString(reg.Descricao, fontNormal, XBrushes.Black, new XPoint(200, yPoint));
                 gfx.DrawString($"R$ {reg.Valor:F2}", fontNormal, corTexto, new XPoint(400, yPoint));
-
                 yPoint += 20;
             }
 
@@ -316,11 +224,63 @@ public partial class RelatorioPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Erro", $"Não foi possível gerar o PDF: {ex.Message}", "OK");
+            await DisplayAlert("Erro", $"Erro ao gerar PDF: {ex.Message}", "OK");
         }
     }
 
-    // --- CARREGAMENTO E FILTRAGEM DE DADOS NA TELA PRINCIPAL ---
+    // --- POPUP SEGURO CORRIGIDO ---
+    private async Task<string?> DisplayPromptAsyncSeguro(string titulo, string mensagem, string valorInicial = "", Keyboard? teclado = null)
+    {
+        var entry = new Entry
+        {
+            Placeholder = "Digite aqui...",
+            Text = valorInicial,
+            Keyboard = teclado ?? Keyboard.Default,
+            HeightRequest = 50,
+            BackgroundColor = Color.FromArgb("#F1F3F5")
+        };
+
+        var tcs = new TaskCompletionSource<string?>();
+
+        var btnSalvar = new Button
+        {
+            Text = "Confirmar",
+            BackgroundColor = Color.FromArgb("#007BFF"),
+            TextColor = Colors.White,
+            HeightRequest = 50,
+            CornerRadius = 8
+        };
+
+        btnSalvar.Clicked += async (s, args) =>
+        {
+            string res = entry.Text;
+            await Navigation.PopModalAsync();
+            tcs.SetResult(res);
+        };
+
+        var dialogPage = new ContentPage
+        {
+            Title = titulo,
+            BackgroundColor = Colors.White,
+            Content = new VerticalStackLayout
+            {
+                Padding = 20,
+                Spacing = 20,
+                VerticalOptions = LayoutOptions.Center,
+                Children =
+                {
+                    new Label { Text = titulo, FontSize = 22, FontAttributes = FontAttributes.Bold, HorizontalOptions = LayoutOptions.Center },
+                    new Label { Text = mensagem, TextColor = Colors.Gray, FontSize = 14 },
+                    entry,
+                    btnSalvar
+                }
+            }
+        };
+
+        await Navigation.PushModalAsync(dialogPage);
+        return await tcs.Task;
+    }
+
     private async Task CarregarDadosFinanceiros()
     {
         var dbService = Handler?.MauiContext?.Services.GetService<Services.DatabaseService>();
@@ -329,6 +289,7 @@ public partial class RelatorioPage : ContentPage
         var listaRegistros = await dbService.ObterRegistrosAsync();
         if (listaRegistros == null) return;
 
+        // Correção aplicada: uso seguro de .Value.Date para lidar com DateTime?
         DateTime dataInicio = dtpInicio.Date.HasValue ? dtpInicio.Date.Value.Date : DateTime.Today;
         DateTime dataFim = dtpFim.Date.HasValue ? dtpFim.Date.Value.Date.AddDays(1).AddSeconds(-1) : DateTime.Today;
 
@@ -337,21 +298,27 @@ public partial class RelatorioPage : ContentPage
             .OrderByDescending(r => r.Data)
             .ToList();
 
-        _totalGanhos = _listaFiltrada
-            .Where(r => r.TipoMovimentacao == "Ganho")
-            .Sum(r => r.Valor);
-
-        _totalGastos = _listaFiltrada
-            .Where(r => r.TipoMovimentacao == "Gasto")
-            .Sum(r => r.Valor);
-
+        _totalGanhos = _listaFiltrada.Where(r => r.TipoMovimentacao == "Ganho").Sum(r => r.Valor);
+        _totalGastos = _listaFiltrada.Where(r => r.TipoMovimentacao == "Gasto").Sum(r => r.Valor);
         _lucroLiquido = _totalGanhos - _totalGastos;
 
         lblTotalGanhos.Text = $"R$ {_totalGanhos:F2}";
         lblTotalGastos.Text = $"R$ {_totalGastos:F2}";
         lblLucroLiquido.Text = $"R$ {_lucroLiquido:F2}";
         lblLucroLiquido.TextColor = _lucroLiquido >= 0 ? MauiColors.Blue : MauiColors.Red;
-
         cvRegistros.ItemsSource = _listaFiltrada;
+    }
+
+    private async void BtnDeletar_Clicked(object sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is int id)
+        {
+            if (await DisplayAlert("Excluir", "Apagar este registro?", "Sim", "Não"))
+            {
+                var dbService = Handler?.MauiContext?.Services.GetService<Services.DatabaseService>();
+                await dbService.DeletarRegistroAsync(id);
+                await CarregarDadosFinanceiros();
+            }
+        }
     }
 }
