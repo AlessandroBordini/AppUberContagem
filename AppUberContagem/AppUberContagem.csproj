@@ -39,7 +39,8 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
 		<AndroidUseAapt2>True</AndroidUseAapt2>
 		<AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-		<AndroidPackageFormat>aab</AndroidPackageFormat>
+		<!-- APK is required to deploy/debug on emulator or device; AAB is for Play Store only -->
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
 	</PropertyGroup>
 
 	<!-- Swift linking required by Plugin.AdMob / Google Mobile Ads on iOS -->

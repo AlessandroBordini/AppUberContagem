@@ -1,5 +1,9 @@
 {
   "profiles": {
+    "Android Emulator": {
+      "commandName": "Project",
+      "commandLineArgs": ""
+    },
     "Windows Machine": {
       "commandName": "Project",
       "nativeDebugging": false
