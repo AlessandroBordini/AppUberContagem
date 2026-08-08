@@ -17,12 +17,11 @@ namespace AppUberContagem.Services
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, "FinancasMotorista.db3");
             _db = new SQLiteAsyncConnection(databasePath);
 
-            // Cria a tabela baseada no modelo do passo anterior
+            // Cria a tabela baseada no modelo
             await _db.CreateTableAsync<RegistroFinanceiro>();
         }
 
-        // Método que usaremos para salvar qualquer ganho (ex: corrida para Indaiatuba) 
-        // ou gasto (ex: gasolina do Mobi, seguro, etc)
+        // Método que usaremos para salvar qualquer ganho ou gasto
         public async Task<int> SalvarRegistroAsync(RegistroFinanceiro registro)
         {
             await Init();
@@ -36,13 +35,20 @@ namespace AppUberContagem.Services
             return await _db.Table<RegistroFinanceiro>().ToListAsync();
         }
 
-        // Método que usaremos lá na frente para os Relatórios por Período
+        // Método para os Relatórios por Período
         public async Task<List<RegistroFinanceiro>> ObterRegistrosPorDataAsync(DateTime dataInicio, DateTime dataFim)
         {
             await Init();
             return await _db.Table<RegistroFinanceiro>()
                             .Where(r => r.Data >= dataInicio && r.Data <= dataFim)
                             .ToListAsync();
+        }
+
+        // Método para deletar um registro pelo ID (Adicionado)
+        public async Task<int> DeletarRegistroAsync(int id)
+        {
+            await Init();
+            return await _db.DeleteAsync<RegistroFinanceiro>(id);
         }
     }
 }

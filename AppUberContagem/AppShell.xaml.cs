@@ -15,21 +15,31 @@ public partial class AppShell : Shell
         AtualizarEstadoMenu();
     }
 
+    // Garante que o menu atualiza assim que o AppShell volta a aparecer em foco
+    protected override void OnParentSet()
+    {
+        base.OnParentSet();
+        if (Parent != null)
+        {
+            AtualizarEstadoMenu();
+        }
+    }
+
     public void AtualizarEstadoMenu()
     {
         bool isPremium = Preferences.Default.Get("IsPremium", false);
 
         if (isPremium)
         {
-            // Se for assinante Premium, remove o aviso de PRO do menu e coloca o ícone normal
-            itemRelatorios.Title = "Relatório Financeiro";
-            itemRelatorios.Icon = "relatorio_normal.png"; // Certifique-se de ter essa imagem ou remova a linha se não usar ícone normal
+            // Se for assinante Premium, remove o cadeado e exibe ícones visuais limpos
+            itemRelatorio.Title = "📊 Relatório Financeiro";
+            itemMetas.Title = "🎯 Metas";
         }
         else
         {
-            // Se for versão Free, exibe o cadeado e o selo PRO no título do menu
-            itemRelatorios.Title = "🔒 Relatório Financeiro (PRO)";
-            itemRelatorios.Icon = "lock_icon.png";
+            // Se for versão Free, exibe o cadeado e o selo PRO em ambos
+            itemRelatorio.Title = "🔒 Relatório Financeiro (PRO)";
+            itemMetas.Title = "🔒 Metas (PRO)";
         }
     }
 
@@ -37,22 +47,27 @@ public partial class AppShell : Shell
     {
         base.OnNavigating(args);
 
-        // Se o usuário tentar navegar para a página de relatórios sem ser Premium
-        if (args.Target.Location.OriginalString.Contains("RelatoriosPage"))
+        // Se o usuário tentar navegar para Relatórios ou Metas sem ser Premium
+        string target = args.Target.Location.OriginalString;
+
+        if (target.Contains("RelatoriosPage") || target.Contains("MetaPage"))
         {
             bool isPremium = Preferences.Default.Get("IsPremium", false);
 
             if (!isPremium)
             {
-                // Cancela a navegação para impedir que abra a tela bloqueada
+                // Cancela a navegação
                 args.Cancel();
 
-                // Exibe o aviso convidativo para assinar o Premium
+                // Define o nome amigável do recurso bloqueado
+                string recurso = target.Contains("RelatoriosPage") ? "o relatório financeiro" : "o acompanhamento de metas";
+
+                // Exibe o aviso convidativo
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
                     bool querAssinar = await Current.DisplayAlert(
                         "Função Premium ⭐",
-                        "O relatório financeiro é exclusivo para assinantes Premium. Deseja desbloquear agora?",
+                        $"O {recurso} é exclusivo para assinantes Premium. Deseja desbloquear agora?",
                         "Sim",
                         "Agora não"
                     );

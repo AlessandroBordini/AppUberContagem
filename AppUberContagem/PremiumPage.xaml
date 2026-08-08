@@ -34,9 +34,10 @@
                            FontAttributes="Bold" 
                            FontSize="16" />
 
-                    <Label Text="✔️ Remoção total de anúncios do aplicativo" FontSize="14" />
-                    <Label Text="✔️ Relatórios avançados de ganhos diários" FontSize="14" />
-                    <Label Text="✔️ Filtro exclusivo de melhores horários" FontSize="14" />
+                    <Label Text="✔️ Relatório Financeiro Completo com filtros" FontSize="14" />
+                    <Label Text="✔️ Exportação de relatórios em PDF" FontSize="14" />
+                    <Label Text="✔️ Gestão avançada de ganhos e gastos extras" FontSize="14" />
+                    <Label Text="✔️ Acompanhamento detalhado de metas" FontSize="14" />
                     <Label Text="✔️ Pagamento único (Acesso Vitalício)" FontSize="14" />
                 </VerticalStackLayout>
             </Frame>
@@ -51,7 +52,7 @@
 
             <!-- Botão de Compra -->
             <Button x:Name="BtnComprar"
-                    Text="Comprar Premium (R$ 14,90)"
+                    Text="Carregando preço..."
                     BackgroundColor="#27AE60"
                     TextColor="White"
                     FontAttributes="Bold"

@@ -13,6 +13,28 @@
 
                 <Label Text="🚗 Corrida" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"/>
 
+                <!-- AVISO DE COMBUSTÍVEL NÃO CONFIGURADO (Escondido por padrão) -->
+                <Frame x:Name="frmAvisoCombustivel" 
+                       BackgroundColor="#FFF3CD" 
+                       BorderColor="#FFEEBA" 
+                       CornerRadius="8" 
+                       Padding="15" 
+                       IsVisible="False">
+                    <Grid ColumnDefinitions="Auto, *">
+                        <Label Grid.Column="0" 
+                               Text="⚠️" 
+                               FontSize="20" 
+                               VerticalOptions="Center" 
+                               Margin="0,0,10,0"/>
+                        <Label Grid.Column="1" 
+                               Text="Combustível não configurado! Vá na aba 'Combustível' e salve os dados para calcular." 
+                               TextColor="#856404" 
+                               FontSize="14"
+                               VerticalOptions="Center" 
+                               LineBreakMode="WordWrap"/>
+                    </Grid>
+                </Frame>
+
                 <Label Text="Preço da corrida" FontAttributes="Bold"/>
                 <Entry x:Name="txtPrecoCorrida" Placeholder="Ex.: 35,50" Keyboard="Telephone"/>
 
@@ -30,7 +52,7 @@
                 <Label Text="📊 Comparativo por Cenário" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,5,0,0"/>
 
                 <!-- Aviso visual de que é clicável -->
-                <Label Text="👆 Toque em um cenário abaixo para aceitar e salvar a corrida" FontSize="13" TextColor="Gray" FontAttributes="Italic" HorizontalOptions="Center" Margin="0,0,0,5"/>
+                <Label Text="Toque em um cenário abaixo para aceitar e salvar a corrida" FontSize="13" TextColor="Gray" FontAttributes="Italic" HorizontalOptions="Center" Margin="0,0,0,5"/>
 
                 <!-- Cenário Urbano -->
                 <VerticalStackLayout Spacing="5" BackgroundColor="#10000000" Padding="12">

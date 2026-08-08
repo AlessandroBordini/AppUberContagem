@@ -25,11 +25,34 @@ public partial class MainPage : ContentPage
         // Verifica se o usuário é Premium e oculta o anúncio se for verdadeiro
         bool isPremium = Preferences.Default.Get("IsPremium", false);
         BottomBanner.IsVisible = !isPremium;
+
+        // Verifica se precisa exibir o aviso de combustível
+        VerificarConfiguracaoCombustivel();
+    }
+
+    private void VerificarConfiguracaoCombustivel()
+    {
+        bool usaGasolina = Preferences.Default.Get("UsaGasolina", true);
+        string strKmGas = Preferences.Default.Get("KmGasolina", "0");
+        string strKmAlc = Preferences.Default.Get("KmAlcool", "0");
+        string strPrecoGas = Preferences.Default.Get("PrecoGasolina", "0");
+        string strPrecoAlc = Preferences.Default.Get("PrecoAlcool", "0");
+
+        double.TryParse(strKmGas.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double kmGas);
+        double.TryParse(strKmAlc.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double kmAlc);
+        double.TryParse(strPrecoGas.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double precoGas);
+        double.TryParse(strPrecoAlc.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double precoAlc);
+
+        double kmPorLitroBase = usaGasolina ? kmGas : kmAlc;
+        double precoLitro = usaGasolina ? precoGas : precoAlc;
+
+        // Mostra o aviso apenas se o Consumo (Km/L) OU o Preço do combustível atual estiver zerado
+        frmAvisoCombustivel.IsVisible = (kmPorLitroBase <= 0 || precoLitro <= 0);
     }
 
     private async void BtnCalcular_Clicked(object sender, EventArgs e)
     {
-        // 1. Verifica se os campos estão preenchidos
+        // 1. Verifica se os campos da corrida estão preenchidos
         if (string.IsNullOrWhiteSpace(txtPrecoCorrida.Text) ||
             string.IsNullOrWhiteSpace(txtDistanciaAtePassageiro.Text) ||
             string.IsNullOrWhiteSpace(txtDistancia.Text))
@@ -62,9 +85,10 @@ public partial class MainPage : ContentPage
         double kmPorLitroBase = usaGasolina ? kmGas : kmAlc;
         double precoLitro = usaGasolina ? precoGas : precoAlc;
 
-        if (kmPorLitroBase <= 0)
+        // GARANTE QUE O CÁLCULO SÓ RODE SE TIVER O PREÇO E O KM/L
+        if (kmPorLitroBase <= 0 || precoLitro <= 0)
         {
-            await DisplayAlert("Falta Configuração", "Por favor, vá até a aba de Combustível e salve o consumo (Km/L).", "OK");
+            await DisplayAlert("Falta Configuração", "Por favor, vá até a aba de Combustível e preencha o consumo (Km/L) e o preço para calcular.", "OK");
             return;
         }
 
@@ -91,19 +115,16 @@ public partial class MainPage : ContentPage
         double lucroRodoviario = valorCorrida - gastoRodoviario;
 
         // 5. Exibe resultados na interface
-        // Urbano
         lblLitrosUrbano.Text = $"{litrosUrbano:F2} L";
         lblGastoUrbano.Text = $"R$ {gastoUrbano:F2}";
         lblLucroUrbano.Text = $"R$ {lucroUrbano:F2}";
         lblLucroUrbano.TextColor = lucroUrbano >= 0 ? Colors.Green : Colors.Red;
 
-        // Misto
         lblLitrosMisto.Text = $"{litrosMisto:F2} L";
         lblGastoMisto.Text = $"R$ {gastoMisto:F2}";
         lblLucroMisto.Text = $"R$ {lucroMisto:F2}";
         lblLucroMisto.TextColor = lucroMisto >= 0 ? Colors.Green : Colors.Red;
 
-        // Rodoviário
         lblLitrosRodoviario.Text = $"{litrosRodoviario:F2} L";
         lblGastoRodoviario.Text = $"R$ {gastoRodoviario:F2}";
         lblLucroRodoviario.Text = $"R$ {lucroRodoviario:F2}";
@@ -173,11 +194,10 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        // 🛑 PERGUNTA DE CONFIRMAÇÃO ANTES DE ACEITAR E SALVAR
         bool confirmarAceite = await DisplayAlert("Confirmação", $"Deseja aceitar esta corrida no cenário {cenario}?", "Sim", "Não");
         if (!confirmarAceite)
         {
-            return; // Interrompe se o motorista clicar em "Não"
+            return;
         }
 
         bool isPremium = Preferences.Default.Get("IsPremium", false);
@@ -187,17 +207,14 @@ public partial class MainPage : ContentPage
             bool querAssinar = await DisplayAlert("Função Premium ⭐", "O registro automático de corridas para controle financeiro é uma função Premium. Deseja conhecer?", "Sim", "Agora não");
             if (querAssinar)
             {
-                // Navega para a tela Premium
                 await Navigation.PushAsync(new PremiumPage());
             }
             return;
         }
 
-        // Puxa o serviço do banco de dados que criamos
         var dbService = Handler?.MauiContext?.Services.GetService<Services.DatabaseService>();
         if (dbService == null) return;
 
-        // 1. Salva o Ganho Bruto (Valor da corrida pago pelo passageiro)
         await dbService.SalvarRegistroAsync(new Models.RegistroFinanceiro
         {
             Data = DateTime.Now,
@@ -207,7 +224,6 @@ public partial class MainPage : ContentPage
             Valor = _ganhoBrutoAtual
         });
 
-        // 2. Salva o Gasto (O custo do combustível daquela corrida)
         await dbService.SalvarRegistroAsync(new Models.RegistroFinanceiro
         {
             Data = DateTime.Now,
@@ -217,10 +233,8 @@ public partial class MainPage : ContentPage
             Valor = gastoCombustivel
         });
 
-        // Feedback visual pro usuário
         await DisplayAlert("Sucesso! ✅", $"Corrida salva no seu relatório!\n\nGanho: R$ {_ganhoBrutoAtual:F2}\nGasto Combustível: R$ {gastoCombustivel:F2}", "OK");
 
-        // Limpa a tela automaticamente após aceitar para ele fazer a próxima
         BtnLimpar_Clicked(this, EventArgs.Empty);
     }
 }

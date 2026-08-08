@@ -6,20 +6,28 @@
     xmlns:local="clr-namespace:AppUberContagem"
     Title="AppUberContagem">
 
-    <FlyoutItem Title="Corrida" Route="MainPage">
+    <!-- 1. Principal: Calculadora de Corrida -->
+    <FlyoutItem Title="🚗 Corrida" Route="MainPage">
         <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Combustível" Route="CombustivelPage">
+    <!-- 2. Configuração de Combustível -->
+    <FlyoutItem Title="⛽ Combustível" Route="CombustivelPage">
         <ShellContent ContentTemplate="{DataTemplate local:CombustivelPage}" />
     </FlyoutItem>
 
-    <!-- Relatório Financeiro gerenciado via código para alternar o bloqueio -->
-    <FlyoutItem x:Name="itemRelatorios" Title="🔒 Relatório Financeiro (PRO)" Route="RelatoriosPage" Icon="lock_icon.png">
-        <ShellContent ContentTemplate="{DataTemplate local:RelatoriosPage}" />
+    <!-- 3. Acompanhamento de Metas -->
+    <FlyoutItem x:Name="itemMetas" Title="🔒 Metas (PRO)" Route="MetaPage">
+        <ShellContent ContentTemplate="{DataTemplate local:MetaPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Seja Premium" Route="PremiumPage">
+    <!-- 4. Relatório Financeiro -->
+    <FlyoutItem x:Name="itemRelatorio" Title="🔒 Relatório Financeiro (PRO)" Route="RelatorioPage">
+        <ShellContent ContentTemplate="{DataTemplate local:RelatorioPage}" />
+    </FlyoutItem>
+
+    <!-- 5. Conversão para Premium (Destaque Visual) -->
+    <FlyoutItem Title="⭐ Seja Premium ⭐" Route="PremiumPage">
         <ShellContent ContentTemplate="{DataTemplate local:PremiumPage}" />
     </FlyoutItem>
 
