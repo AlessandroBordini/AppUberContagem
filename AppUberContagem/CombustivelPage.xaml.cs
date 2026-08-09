@@ -56,26 +56,28 @@ public partial class CombustivelPage : ContentPage
         rbGasolina.IsChecked = usaGasolina;
         rbAlcool.IsChecked = !usaGasolina;
 
-        // Garante que o estado visual dos campos reflita a configuração carregada
-        txtKmGasolina.IsEnabled = usaGasolina;
-        txtPrecoGasolina.IsEnabled = usaGasolina;
-        txtKmAlcool.IsEnabled = !usaGasolina;
-        txtPrecoAlcool.IsEnabled = !usaGasolina;
+        AtualizarVisibilidadeCampos(usaGasolina);
     }
 
     private void RbCombustivel_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
         if (e.Value)
         {
-            bool ehGasolina = rbGasolina.IsChecked;
-
-            // Ativa/desativa os campos conforme a escolha do RadioButton
-            txtKmGasolina.IsEnabled = ehGasolina;
-            txtPrecoGasolina.IsEnabled = ehGasolina;
-
-            txtKmAlcool.IsEnabled = !ehGasolina;
-            txtPrecoAlcool.IsEnabled = !ehGasolina;
+            AtualizarVisibilidadeCampos(rbGasolina.IsChecked);
         }
+    }
+
+    private void AtualizarVisibilidadeCampos(bool ehGasolina)
+    {
+        lblKmGasolina.IsVisible = ehGasolina;
+        txtKmGasolina.IsVisible = ehGasolina;
+        lblPrecoGasolina.IsVisible = ehGasolina;
+        txtPrecoGasolina.IsVisible = ehGasolina;
+
+        lblKmAlcool.IsVisible = !ehGasolina;
+        txtKmAlcool.IsVisible = !ehGasolina;
+        lblPrecoAlcool.IsVisible = !ehGasolina;
+        txtPrecoAlcool.IsVisible = !ehGasolina;
     }
 
     private async void BtnSalvar_Clicked(object sender, EventArgs e)

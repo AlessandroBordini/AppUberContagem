@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
              xmlns:services="clr-namespace:AppUberContagem.Services"
+             xmlns:helpers="clr-namespace:AppUberContagem.Helpers"
              x:Class="AppUberContagem.CombustivelPage"
              Title="Combustível">
 
@@ -19,17 +20,33 @@
                     <RadioButton x:Name="rbAlcool" Content="Álcool" GroupName="Combustivel" CheckedChanged="RbCombustivel_CheckedChanged"/>
                 </HorizontalStackLayout>
 
-                <Label Text="Consumo na Gasolina (Km/L)" FontAttributes="Bold"/>
-                <Entry x:Name="txtKmGasolina" Placeholder="Ex.: 12,5" Keyboard="Telephone"/>
+                <Label x:Name="lblKmGasolina" Text="Consumo na Gasolina (Km/L)" FontAttributes="Bold"/>
+                <Entry x:Name="txtKmGasolina" Placeholder="Ex.: 12,5" Keyboard="Telephone">
+                    <Entry.Behaviors>
+                        <helpers:EntradaNumeroRealBehavior />
+                    </Entry.Behaviors>
+                </Entry>
 
-                <Label Text="Consumo no Álcool (Km/L)" FontAttributes="Bold"/>
-                <Entry x:Name="txtKmAlcool" Placeholder="Ex.: 8,7" Keyboard="Telephone" IsEnabled="False"/>
+                <Label x:Name="lblKmAlcool" Text="Consumo no Álcool (Km/L)" FontAttributes="Bold" IsVisible="False"/>
+                <Entry x:Name="txtKmAlcool" Placeholder="Ex.: 8,7" Keyboard="Telephone" IsVisible="False">
+                    <Entry.Behaviors>
+                        <helpers:EntradaNumeroRealBehavior />
+                    </Entry.Behaviors>
+                </Entry>
 
-                <Label Text="Preço do litro da Gasolina" FontAttributes="Bold"/>
-                <Entry x:Name="txtPrecoGasolina" Placeholder="Ex.: 6,39" Keyboard="Telephone"/>
+                <Label x:Name="lblPrecoGasolina" Text="Preço do litro da Gasolina" FontAttributes="Bold"/>
+                <Entry x:Name="txtPrecoGasolina" Placeholder="Ex.: 6,39" Keyboard="Telephone">
+                    <Entry.Behaviors>
+                        <helpers:EntradaNumeroRealBehavior />
+                    </Entry.Behaviors>
+                </Entry>
 
-                <Label Text="Preço do litro do Álcool" FontAttributes="Bold"/>
-                <Entry x:Name="txtPrecoAlcool" Placeholder="Ex.: 4,49" Keyboard="Telephone" IsEnabled="False"/>
+                <Label x:Name="lblPrecoAlcool" Text="Preço do litro do Álcool" FontAttributes="Bold" IsVisible="False"/>
+                <Entry x:Name="txtPrecoAlcool" Placeholder="Ex.: 4,49" Keyboard="Telephone" IsVisible="False">
+                    <Entry.Behaviors>
+                        <helpers:EntradaNumeroRealBehavior />
+                    </Entry.Behaviors>
+                </Entry>
 
                 <Button x:Name="btnSalvar" Text="Salvar Configuração" Clicked="BtnSalvar_Clicked" BackgroundColor="#007BFF" TextColor="White" CornerRadius="8" HeightRequest="50"/>
 

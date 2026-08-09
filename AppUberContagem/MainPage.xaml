@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
              xmlns:services="clr-namespace:AppUberContagem.Services"
+             xmlns:helpers="clr-namespace:AppUberContagem.Helpers"
              x:Class="AppUberContagem.MainPage"
              Title="Principal">
 
@@ -37,13 +38,25 @@
                 </Frame>
 
                 <Label Text="Preço da corrida" FontAttributes="Bold"/>
-                <Entry x:Name="txtPrecoCorrida" Placeholder="Ex.: 35,50" Keyboard="Telephone"/>
+                <Entry x:Name="txtPrecoCorrida" Placeholder="Ex.: 35,50" Keyboard="Telephone">
+                    <Entry.Behaviors>
+                        <helpers:EntradaNumeroRealBehavior />
+                    </Entry.Behaviors>
+                </Entry>
 
                 <Label Text="Distância até o passageiro (Km)" FontAttributes="Bold"/>
-                <Entry x:Name="txtDistanciaAtePassageiro" Placeholder="Ex.: 2,5" Keyboard="Telephone"/>
+                <Entry x:Name="txtDistanciaAtePassageiro" Placeholder="Ex.: 2,5" Keyboard="Telephone">
+                    <Entry.Behaviors>
+                        <helpers:EntradaNumeroRealBehavior />
+                    </Entry.Behaviors>
+                </Entry>
 
                 <Label Text="Distância da corrida (Km)" FontAttributes="Bold"/>
-                <Entry x:Name="txtDistancia" Placeholder="Ex.: 12,4" Keyboard="Telephone"/>
+                <Entry x:Name="txtDistancia" Placeholder="Ex.: 12,4" Keyboard="Telephone">
+                    <Entry.Behaviors>
+                        <helpers:EntradaNumeroRealBehavior />
+                    </Entry.Behaviors>
+                </Entry>
 
                 <Button x:Name="btnCalcular" Text="Calcular" BackgroundColor="#007BFF" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50" Clicked="BtnCalcular_Clicked"/>
                 <Button x:Name="btnLimpar" Text="Limpar" BackgroundColor="#DC3545" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50" Clicked="BtnLimpar_Clicked"/>
