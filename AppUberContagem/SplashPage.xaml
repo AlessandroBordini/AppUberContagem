@@ -5,48 +5,111 @@
              BackgroundColor="#0F2B2B"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+    <!-- Grid principal que engloba a tela original, o rodapé e a camada do popup por cima -->
+    <Grid>
 
-        <VerticalStackLayout Spacing="20" HorizontalOptions="Center" VerticalOptions="Center">
+        <!-- ========================================== -->
+        <!-- SEU VISUAL ORIGINAL (ATUALIZADO)           -->
+        <!-- ========================================== -->
+        <Grid VerticalOptions="Center" HorizontalOptions="Center">
 
-            <!-- 
-                ESPAÇO PARA A SUA IMAGEM DO LOGO:
-                1. Adicione a imagem na pasta 'Resources/Images' (ex: logo_johnnyfox.png)
-                2. Atualize o Source abaixo com o nome exato do arquivo
-            -->
-            <Image 
-                Source="logo.png"
-                Aspect="AspectFit"
-                WidthRequest="180"
-                HeightRequest="180"
-                HorizontalOptions="Center"/>
+            <VerticalStackLayout Spacing="20" HorizontalOptions="Center" VerticalOptions="Center">
 
-            <!-- Nome da Empresa -->
-            <Label 
-                Text="JOHNNYFOX"
-                FontSize="16"
-                FontAttributes="Bold"
-                TextColor="#888888"
-                CharacterSpacing="4"
-                HorizontalOptions="Center"/>
+                <!-- Imagem do Logo -->
+                <Image 
+                    Source="logo.png"
+                    Aspect="AspectFit"
+                    WidthRequest="180"
+                    HeightRequest="180"
+                    HorizontalOptions="Center"/>
 
-            <!-- Nome Principal do App -->
-            <Label 
-                Text="Calculadora de Corridas"
-                FontSize="36"
-                FontAttributes="Bold"
-                TextColor="White"
-                HorizontalOptions="Center"/>
+                <!-- Nome da Empresa -->
+                <Label 
+                    Text="JOHNNYFOX"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    TextColor="#888888"
+                    CharacterSpacing="4"
+                    HorizontalOptions="Center"/>
 
-            <!-- Subtítulo descritivo -->
-            <Label 
-                Text="Calculadora de Lucro de Corridas"
-                FontSize="14"
-                TextColor="#AAAAAA"
-                HorizontalOptions="Center"/>
+                <!-- Nome Principal do App (Alinhamento centralizado corrigido para quebras de linha) -->
+                <Label 
+                    Text="Calculadora de Corridas"
+                    FontSize="36"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"/>
 
-        </VerticalStackLayout>
+                <!-- Subtítulo descritivo -->
+                <Label 
+                    Text="Calculadora de Lucro de Corridas"
+                    FontSize="14"
+                    TextColor="#AAAAAA"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"/>
+
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <!-- ========================================== -->
+        <!-- RODAPÉ - DIREITOS RESERVADOS               -->
+        <!-- ========================================== -->
+        <Label 
+            Text="© SciFox - Todos os direitos reservados"
+            FontSize="12"
+            TextColor="#666666"
+            HorizontalOptions="Center"
+            VerticalOptions="End"
+            Margin="0,0,0,25"/>
+
+        <!-- ========================================== -->
+        <!-- CAMADA DO POPUP (SOBREPOSIÇÃO)             -->
+        <!-- ========================================== -->
+        <ContentView x:Name="PopupTermos" BackgroundColor="#CC000000" IsVisible="False">
+
+            <Frame BackgroundColor="White" 
+                   CornerRadius="16" 
+                   Padding="25" 
+                   HorizontalOptions="Center" 
+                   VerticalOptions="Center" 
+                   WidthRequest="320" 
+                   HasShadow="True">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <Label Text="Termos de Uso" 
+                           FontSize="22" 
+                           FontAttributes="Bold" 
+                           TextColor="#0F2B2B" 
+                           HorizontalTextAlignment="Center"/>
+
+                    <Label Text="Para continuar utilizando o aplicativo, você precisa ler e aceitar nossa Política de Privacidade." 
+                           FontSize="15" 
+                           TextColor="#555555" 
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Botão que abre o site -->
+                    <Button x:Name="BtnLerPolitica" 
+                            Text="📄 Ler Política de Privacidade" 
+                            BackgroundColor="Transparent" 
+                            TextColor="#007BFF" 
+                            Clicked="BtnLerPolitica_Clicked"/>
+
+                    <!-- Botão de Aceite -->
+                    <Button x:Name="BtnAceitar" 
+                            Text="Aceitar e Continuar" 
+                            BackgroundColor="#0F2B2B" 
+                            TextColor="White" 
+                            FontAttributes="Bold" 
+                            CornerRadius="8" 
+                            Clicked="BtnAceitar_Clicked"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </ContentView>
 
     </Grid>
-
 </ContentPage>

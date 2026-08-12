@@ -16,15 +16,16 @@
                 <Label Text="Desbloqueie o Potencial Máximo!" 
                        FontSize="22" 
                        FontAttributes="Bold" 
-                       HorizontalTextAlignment="Center" />
+                       HorizontalTextAlignment="Center" 
+                       TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
                 <Label Text="Torne-se Premium e tenha acesso a ferramentas exclusivas para motoristas." 
                        FontSize="14" 
-                       TextColor="Gray"
+                       TextColor="{AppThemeBinding Light=Gray, Dark=#A0A0A0}"
                        HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
 
             <!-- Lista de Funcionalidades Extras -->
-            <Frame BorderColor="#E0E0E0" 
+            <Frame BorderColor="{AppThemeBinding Light='#E0E0E0', Dark='#333333'}" 
                    CornerRadius="12" 
                    Padding="16" 
                    HasShadow="True"
@@ -32,13 +33,14 @@
                 <VerticalStackLayout Spacing="12">
                     <Label Text="✨ Benefícios Inclusos:" 
                            FontAttributes="Bold" 
-                           FontSize="16" />
+                           FontSize="16" 
+                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
-                    <Label Text="✔️ Relatório Financeiro Completo com filtros" FontSize="14" />
-                    <Label Text="✔️ Exportação de relatórios em PDF" FontSize="14" />
-                    <Label Text="✔️ Gestão avançada de ganhos e gastos extras" FontSize="14" />
-                    <Label Text="✔️ Acompanhamento detalhado de metas" FontSize="14" />
-                    <Label Text="✔️ Pagamento único (Acesso Vitalício)" FontSize="14" />
+                    <Label Text="✔️ Relatório Financeiro Completo com filtros" FontSize="14" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                    <Label Text="✔️ Exportação de relatórios em PDF" FontSize="14" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                    <Label Text="✔️ Gestão avançada de ganhos e gastos extras" FontSize="14" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                    <Label Text="✔️ Acompanhamento detalhado de metas" FontSize="14" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                    <Label Text="✔️ Pagamento único (Acesso Vitalício)" FontSize="14" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
                 </VerticalStackLayout>
             </Frame>
 

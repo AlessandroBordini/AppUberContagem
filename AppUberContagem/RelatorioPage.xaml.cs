@@ -228,7 +228,7 @@ public partial class RelatorioPage : ContentPage
         }
     }
 
-    // --- POPUP SEGURO CORRIGIDO ---
+    // --- POPUP SEGURO CORRIGIDO (AGORA COM BOTÃO DE SAIR) ---
     private async Task<string?> DisplayPromptAsyncSeguro(string titulo, string mensagem, string valorInicial = "", Keyboard? teclado = null)
     {
         var entry = new Entry
@@ -242,6 +242,7 @@ public partial class RelatorioPage : ContentPage
 
         var tcs = new TaskCompletionSource<string?>();
 
+        // Botão de Confirmar Original
         var btnSalvar = new Button
         {
             Text = "Confirmar",
@@ -250,7 +251,6 @@ public partial class RelatorioPage : ContentPage
             HeightRequest = 50,
             CornerRadius = 8
         };
-
         btnSalvar.Clicked += async (s, args) =>
         {
             string res = entry.Text;
@@ -258,21 +258,72 @@ public partial class RelatorioPage : ContentPage
             tcs.SetResult(res);
         };
 
+        // Novo Botão de Cancelar (Fica ao lado do Confirmar)
+        var btnCancelar = new Button
+        {
+            Text = "Cancelar",
+            BackgroundColor = Colors.Transparent,
+            TextColor = Colors.Red,
+            HeightRequest = 50,
+            CornerRadius = 8
+        };
+        btnCancelar.Clicked += async (s, args) =>
+        {
+            await Navigation.PopModalAsync();
+            tcs.SetResult(null); // Retorna nulo para indicar o cancelamento
+        };
+
+        // Agrupando os botões de Cancelar e Confirmar lado a lado
+        var gridBotoes = new Grid
+        {
+            ColumnDefinitions = { new ColumnDefinition { Width = GridLength.Star }, new ColumnDefinition { Width = GridLength.Star } },
+            ColumnSpacing = 10
+        };
+        gridBotoes.Add(btnCancelar, 0, 0);
+        gridBotoes.Add(btnSalvar, 1, 0);
+
+        // Novo botão de Fechar (Um "X" no canto superior direito)
+        var btnFecharCanto = new Button
+        {
+            Text = "❌",
+            BackgroundColor = Colors.Transparent,
+            HorizontalOptions = LayoutOptions.End,
+            VerticalOptions = LayoutOptions.Start,
+            Margin = new Thickness(0, 10, 10, 0),
+            WidthRequest = 45,
+            HeightRequest = 45
+        };
+        btnFecharCanto.Clicked += async (s, args) =>
+        {
+            await Navigation.PopModalAsync();
+            tcs.SetResult(null); // Retorna nulo para indicar o cancelamento
+        };
+
+        // Layout Principal do Popup
+        var layoutPrincipal = new VerticalStackLayout
+        {
+            Padding = 20,
+            Spacing = 20,
+            VerticalOptions = LayoutOptions.Center,
+            Children =
+            {
+                new Label { Text = titulo, FontSize = 22, FontAttributes = FontAttributes.Bold, HorizontalOptions = LayoutOptions.Center },
+                new Label { Text = mensagem, TextColor = Colors.Gray, FontSize = 14 },
+                entry,
+                gridBotoes // Adiciona os dois botões (Cancelar e Confirmar)
+            }
+        };
+
         var dialogPage = new ContentPage
         {
             Title = titulo,
             BackgroundColor = Colors.White,
-            Content = new VerticalStackLayout
+            Content = new Grid
             {
-                Padding = 20,
-                Spacing = 20,
-                VerticalOptions = LayoutOptions.Center,
                 Children =
                 {
-                    new Label { Text = titulo, FontSize = 22, FontAttributes = FontAttributes.Bold, HorizontalOptions = LayoutOptions.Center },
-                    new Label { Text = mensagem, TextColor = Colors.Gray, FontSize = 14 },
-                    entry,
-                    btnSalvar
+                    layoutPrincipal, // O conteúdo no centro
+                    btnFecharCanto   // O "X" no canto
                 }
             }
         };
@@ -289,7 +340,6 @@ public partial class RelatorioPage : ContentPage
         var listaRegistros = await dbService.ObterRegistrosAsync();
         if (listaRegistros == null) return;
 
-        // Correção aplicada: uso seguro de .Value.Date para lidar com DateTime?
         DateTime dataInicio = dtpInicio.Date.HasValue ? dtpInicio.Date.Value.Date : DateTime.Today;
         DateTime dataFim = dtpFim.Date.HasValue ? dtpFim.Date.Value.Date.AddDays(1).AddSeconds(-1) : DateTime.Today;
 

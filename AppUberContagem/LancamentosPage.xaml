@@ -3,15 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:helpers="clr-namespace:AppUberContagem.Helpers"
              x:Class="AppUberContagem.LancamentosPage"
-             Title="Novo Lançamento">
+             Title="Novo Lançamento"
+             BackgroundColor="{AppThemeBinding Light=White, Dark=#121212}">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Label Text="✍️ Adicionar Movimentação" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,10"/>
+            <Label Text="✍️ Adicionar Movimentação" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   Margin="0,0,0,10"
+                   TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
-            <Label Text="Tipo de Lançamento" FontAttributes="Bold"/>
-            <Picker x:Name="pckTipo" Title="Selecione..." BackgroundColor="#F1F3F5">
+            <Label Text="Tipo de Lançamento" 
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
+            <Picker x:Name="pckTipo" 
+                    Title="Selecione..." 
+                    BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#1E1E1E}"
+                    TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
+                    TitleColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>Gasto</x:String>
@@ -20,8 +32,14 @@
                 </Picker.ItemsSource>
             </Picker>
 
-            <Label Text="Categoria" FontAttributes="Bold"/>
-            <Picker x:Name="pckCategoria" Title="Selecione..." BackgroundColor="#F1F3F5">
+            <Label Text="Categoria" 
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
+            <Picker x:Name="pckCategoria" 
+                    Title="Selecione..." 
+                    BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#1E1E1E}"
+                    TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
+                    TitleColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>Combustível</x:String>
@@ -35,18 +53,33 @@
                 </Picker.ItemsSource>
             </Picker>
 
-            <Label Text="Descrição (Opcional)" FontAttributes="Bold"/>
-            <Entry x:Name="txtDescricao" Placeholder="Ex: Gasolina do Mobi, Pedágio Indaiatuba..."/>
+            <Label Text="Descrição (Opcional)" 
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
+            <Entry x:Name="txtDescricao" 
+                   Placeholder="Ex: Gasolina do Mobi, Pedágio Indaiatuba..."
+                   TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
+                   PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}"/>
 
-            <Label Text="Valor (R$)" FontAttributes="Bold"/>
-            <Entry x:Name="txtValor" Placeholder="Ex: 150,00" Keyboard="Numeric">
+            <Label Text="Valor (R$)" 
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
+            <Entry x:Name="txtValor" 
+                   Placeholder="Ex: 150,00" 
+                   Keyboard="Numeric"
+                   TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
+                   PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
                 <Entry.Behaviors>
                     <helpers:EntradaNumeroRealBehavior />
                 </Entry.Behaviors>
             </Entry>
 
-            <Label Text="Data da Movimentação" FontAttributes="Bold"/>
-            <DatePicker x:Name="dtpData" Format="dd/MM/yyyy"/>
+            <Label Text="Data da Movimentação" 
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
+            <DatePicker x:Name="dtpData" 
+                        Format="dd/MM/yyyy"
+                        TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
             <Button Text="Salvar Lançamento" 
                     BackgroundColor="#28A745" 

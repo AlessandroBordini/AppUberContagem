@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:AppUberContagem"
              x:Class="AppUberContagem.RelatorioPage"
-             Title="Relatório Financeiro">
+             Title="Relatório Financeiro"
+             BackgroundColor="{AppThemeBinding Light=White, Dark=#121212}">
 
     <ContentPage.Resources>
         <!-- Registra o conversor de cores para pintar Ganhos (Verde) e Gastos (Vermelho) -->
@@ -23,13 +24,13 @@
         <!-- 2. DATAS DE INÍCIO E FIM + BOTÕES NOVO E EXPORTAR PDF -->
         <Grid Grid.Row="1" ColumnDefinitions="*, *, Auto, Auto" ColumnSpacing="8">
             <VerticalStackLayout Grid.Column="0">
-                <Label Text="Início" FontSize="12" TextColor="Gray"/>
-                <DatePicker x:Name="dtpInicio" DateSelected="OnDataFiltroChanged"/>
+                <Label Text="Início" FontSize="12" TextColor="{AppThemeBinding Light=Gray, Dark=#A0A0A0}"/>
+                <DatePicker x:Name="dtpInicio" DateSelected="OnDataFiltroChanged" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
             </VerticalStackLayout>
 
             <VerticalStackLayout Grid.Column="1">
-                <Label Text="Fim" FontSize="12" TextColor="Gray"/>
-                <DatePicker x:Name="dtpFim" DateSelected="OnDataFiltroChanged"/>
+                <Label Text="Fim" FontSize="12" TextColor="{AppThemeBinding Light=Gray, Dark=#A0A0A0}"/>
+                <DatePicker x:Name="dtpFim" DateSelected="OnDataFiltroChanged" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
             </VerticalStackLayout>
 
             <!-- Botão Novo -->
@@ -42,21 +43,30 @@
         <!-- 3. CARDS DE RESUMO DO PERÍODO -->
         <Grid Grid.Row="2" ColumnDefinitions="*,*,*" ColumnSpacing="10">
             <!-- Card Ganhos -->
-            <VerticalStackLayout Grid.Column="0" BackgroundColor="#E8F5E9" Padding="10" Spacing="5">
-                <Label Text="Ganhos" FontSize="12" TextColor="Green" FontAttributes="Bold"/>
-                <Label x:Name="lblTotalGanhos" Text="R$ 0,00" FontSize="16" FontAttributes="Bold" TextColor="Green"/>
+            <VerticalStackLayout Grid.Column="0" 
+                                 BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#0B2915}" 
+                                 Padding="10" 
+                                 Spacing="5">
+                <Label Text="Ganhos" FontSize="12" TextColor="{AppThemeBinding Light=Green, Dark=#2ECC71}" FontAttributes="Bold"/>
+                <Label x:Name="lblTotalGanhos" Text="R$ 0,00" FontSize="16" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Green, Dark=#2ECC71}"/>
             </VerticalStackLayout>
 
             <!-- Card Gastos -->
-            <VerticalStackLayout Grid.Column="1" BackgroundColor="#FFEBEE" Padding="10" Spacing="5">
-                <Label Text="Gastos" FontSize="12" TextColor="Red" FontAttributes="Bold"/>
-                <Label x:Name="lblTotalGastos" Text="R$ 0,00" FontSize="16" FontAttributes="Bold" TextColor="Red"/>
+            <VerticalStackLayout Grid.Column="1" 
+                                 BackgroundColor="{AppThemeBinding Light=#FFEBEE, Dark=#381316}" 
+                                 Padding="10" 
+                                 Spacing="5">
+                <Label Text="Gastos" FontSize="12" TextColor="{AppThemeBinding Light=Red, Dark=#E74C3C}" FontAttributes="Bold"/>
+                <Label x:Name="lblTotalGastos" Text="R$ 0,00" FontSize="16" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Red, Dark=#E74C3C}"/>
             </VerticalStackLayout>
 
             <!-- Card Lucro Líquido -->
-            <VerticalStackLayout Grid.Column="2" BackgroundColor="#E3F2FD" Padding="10" Spacing="5">
-                <Label Text="Líquido" FontSize="12" TextColor="Blue" FontAttributes="Bold"/>
-                <Label x:Name="lblLucroLiquido" Text="R$ 0,00" FontSize="16" FontAttributes="Bold" TextColor="Blue"/>
+            <VerticalStackLayout Grid.Column="2" 
+                                 BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#0D243A}" 
+                                 Padding="10" 
+                                 Spacing="5">
+                <Label Text="Líquido" FontSize="12" TextColor="{AppThemeBinding Light=Blue, Dark=#3498DB}" FontAttributes="Bold"/>
+                <Label x:Name="lblLucroLiquido" Text="R$ 0,00" FontSize="16" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Blue, Dark=#3498DB}"/>
             </VerticalStackLayout>
         </Grid>
 
@@ -64,7 +74,11 @@
         <CollectionView Grid.Row="3" x:Name="cvRegistros">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Padding="12" Margin="0,4" CornerRadius="8" BorderColor="#E0E0E0" BackgroundColor="#F9F9F9">
+                    <Frame Padding="12" 
+                           Margin="0,4" 
+                           CornerRadius="8" 
+                           BorderColor="{AppThemeBinding Light=#E0E0E0, Dark=#333333}" 
+                           BackgroundColor="{AppThemeBinding Light=#F9F9F9, Dark=#1E1E1E}">
                         <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
 
                             <!-- Detalhes do Lançamento -->
@@ -72,11 +86,11 @@
                                 <HorizontalStackLayout Spacing="10">
                                     <Label Text="{Binding TipoMovimentacao}" FontAttributes="Bold" 
                                            TextColor="{Binding TipoMovimentacao, Converter={StaticResource ColorConverter}}"/>
-                                    <Label Text="•" TextColor="Gray"/>
-                                    <Label Text="{Binding Categoria}" FontAttributes="Bold"/>
+                                    <Label Text="•" TextColor="{AppThemeBinding Light=Gray, Dark=#A0A0A0}"/>
+                                    <Label Text="{Binding Categoria}" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
                                 </HorizontalStackLayout>
-                                <Label Text="{Binding Descricao}" FontSize="13" TextColor="DimGray"/>
-                                <Label Text="{Binding Data, StringFormat='Data: {0:dd/MM/yyyy}'}" FontSize="12" TextColor="Gray"/>
+                                <Label Text="{Binding Descricao}" FontSize="13" TextColor="{AppThemeBinding Light=DimGray, Dark=#CCCCCC}"/>
+                                <Label Text="{Binding Data, StringFormat='Data: {0:dd/MM/yyyy}'}" FontSize="12" TextColor="{AppThemeBinding Light=Gray, Dark=#A0A0A0}"/>
                             </VerticalStackLayout>
 
                             <!-- Valor -->

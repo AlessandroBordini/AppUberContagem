@@ -5,7 +5,8 @@
              xmlns:services="clr-namespace:AppUberContagem.Services"
              xmlns:helpers="clr-namespace:AppUberContagem.Helpers"
              x:Class="AppUberContagem.MainPage"
-             Title="Principal">
+             Title="Principal"
+             BackgroundColor="{AppThemeBinding Light=White, Dark=#121212}">
 
     <Grid RowDefinitions="*,Auto" x:Name="MainGrid">
 
@@ -13,12 +14,16 @@
         <ScrollView Grid.Row="0">
             <VerticalStackLayout Padding="20" Spacing="15">
 
-                <Label Text="🚗 Corrida" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <Label Text="🚗 Corrida" 
+                       FontSize="28" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
                 <!-- AVISO DE COMBUSTÍVEL NÃO CONFIGURADO (Escondido por padrão) -->
                 <Frame x:Name="frmAvisoCombustivel" 
-                       BackgroundColor="#FFF3CD" 
-                       BorderColor="#FFEEBA" 
+                       BackgroundColor="{AppThemeBinding Light=#FFF3CD, Dark=#332701}" 
+                       BorderColor="{AppThemeBinding Light=#FFEEBA, Dark=#665202}" 
                        CornerRadius="8" 
                        Padding="15" 
                        IsVisible="False">
@@ -30,29 +35,47 @@
                                Margin="0,0,10,0"/>
                         <Label Grid.Column="1" 
                                Text="Combustível não configurado! Vá na aba 'Combustível' e salve os dados para calcular." 
-                               TextColor="#856404" 
+                               TextColor="{AppThemeBinding Light=#856404, Dark=#FFDA6A}" 
                                FontSize="14"
                                VerticalOptions="Center" 
                                LineBreakMode="WordWrap"/>
                     </Grid>
                 </Frame>
 
-                <Label Text="Preço da corrida" FontAttributes="Bold"/>
-                <Entry x:Name="txtPrecoCorrida" Placeholder="Ex.: 35,50" Keyboard="Telephone">
+                <Label Text="Preço da corrida" 
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
+                <Entry x:Name="txtPrecoCorrida" 
+                       Placeholder="Ex.: 35,50" 
+                       Keyboard="Telephone"
+                       TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
+                       PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
                     <Entry.Behaviors>
                         <helpers:EntradaNumeroRealBehavior />
                     </Entry.Behaviors>
                 </Entry>
 
-                <Label Text="Distância até o passageiro (Km)" FontAttributes="Bold"/>
-                <Entry x:Name="txtDistanciaAtePassageiro" Placeholder="Ex.: 2,5" Keyboard="Telephone">
+                <Label Text="Distância até o passageiro (Km)" 
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
+                <Entry x:Name="txtDistanciaAtePassageiro" 
+                       Placeholder="Ex.: 2,5" 
+                       Keyboard="Telephone"
+                       TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
+                       PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
                     <Entry.Behaviors>
                         <helpers:EntradaNumeroRealBehavior />
                     </Entry.Behaviors>
                 </Entry>
 
-                <Label Text="Distância da corrida (Km)" FontAttributes="Bold"/>
-                <Entry x:Name="txtDistancia" Placeholder="Ex.: 12,4" Keyboard="Telephone">
+                <Label Text="Distância da corrida (Km)" 
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
+                <Entry x:Name="txtDistancia" 
+                       Placeholder="Ex.: 12,4" 
+                       Keyboard="Telephone"
+                       TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
+                       PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
                     <Entry.Behaviors>
                         <helpers:EntradaNumeroRealBehavior />
                     </Entry.Behaviors>
@@ -61,64 +84,88 @@
                 <Button x:Name="btnCalcular" Text="Calcular" BackgroundColor="#007BFF" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50" Clicked="BtnCalcular_Clicked"/>
                 <Button x:Name="btnLimpar" Text="Limpar" BackgroundColor="#DC3545" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50" Clicked="BtnLimpar_Clicked"/>
 
-                <BoxView HeightRequest="1" Color="Gray" Margin="0,10"/>
+                <BoxView HeightRequest="1" Color="{AppThemeBinding Light=Gray, Dark=#333333}" Margin="0,10"/>
 
-                <Label Text="📊 Comparativo por Cenário" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,5,0,0"/>
+                <Label Text="📊 Comparativo por Cenário" 
+                       FontSize="20" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center" 
+                       Margin="0,5,0,0"
+                       TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
                 <!-- Aviso visual de que é clicável -->
-                <Label Text="Toque em um cenário abaixo para aceitar e salvar a corrida" FontSize="13" TextColor="Gray" FontAttributes="Italic" HorizontalOptions="Center" Margin="0,0,0,5"/>
+                <Label Text="Toque em um cenário abaixo para aceitar e salvar a corrida" 
+                       FontSize="13" 
+                       TextColor="{AppThemeBinding Light=Gray, Dark=#A0A0A0}" 
+                       FontAttributes="Italic" 
+                       HorizontalOptions="Center" 
+                       Margin="0,0,0,5"/>
 
                 <!-- Cenário Urbano -->
-                <VerticalStackLayout Spacing="5" BackgroundColor="#F1F3F5" Padding="12">
+                <VerticalStackLayout Spacing="5" 
+                                     BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#1E1E1E}" 
+                                     Padding="12">
                     <VerticalStackLayout.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnCenarioUrbanoTapped" />
                     </VerticalStackLayout.GestureRecognizers>
-                    <Label Text="✅ 🏙️ Urbano (Padrão)" FontAttributes="Bold"/>
+                    <Label Text="✅ 🏙️ Urbano (Padrão)" 
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto">
-                        <Label Grid.Row="0" Grid.Column="0" Text="Litros gastos:"/>
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="lblLitrosUrbano" Text="0,00 L" HorizontalOptions="End"/>
+                        <Label Grid.Row="0" Grid.Column="0" Text="Litros gastos:" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="lblLitrosUrbano" Text="0,00 L" HorizontalOptions="End" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
-                        <Label Grid.Row="1" Grid.Column="0" Text="Gasto combustível:"/>
-                        <Label Grid.Row="1" Grid.Column="1" x:Name="lblGastoUrbano" Text="R$ 0,00" HorizontalOptions="End"/>
+                        <Label Grid.Row="1" Grid.Column="0" Text="Gasto combustível:" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="lblGastoUrbano" Text="R$ 0,00" HorizontalOptions="End" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
-                        <Label Grid.Row="2" Grid.Column="0" Text="Lucro / Resultado:" FontAttributes="Bold"/>
-                        <Label Grid.Row="2" Grid.Column="1" x:Name="lblLucroUrbano" Text="R$ 0,00" FontAttributes="Bold" TextColor="Green" HorizontalOptions="End"/>
+                        <Label Grid.Row="2" Grid.Column="0" Text="Lucro / Resultado:" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="lblLucroUrbano" Text="R$ 0,00" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Green, Dark=#2ECC71}" HorizontalOptions="End"/>
                     </Grid>
                 </VerticalStackLayout>
 
                 <!-- Cenário Misto -->
-                <VerticalStackLayout Spacing="5" BackgroundColor="#F1F3F5" Padding="12" Margin="0,5,0,0">
+                <VerticalStackLayout Spacing="5" 
+                                     BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#1E1E1E}" 
+                                     Padding="12" 
+                                     Margin="0,5,0,0">
                     <VerticalStackLayout.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnCenarioMistoTapped" />
                     </VerticalStackLayout.GestureRecognizers>
-                    <Label Text="✅ 🛣️ Misto (Avenidas/Fluido)" FontAttributes="Bold"/>
+                    <Label Text="✅ 🛣️ Misto (Avenidas/Fluido)" 
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto">
-                        <Label Grid.Row="0" Grid.Column="0" Text="Litros gastos:"/>
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="lblLitrosMisto" Text="0,00 L" HorizontalOptions="End"/>
+                        <Label Grid.Row="0" Grid.Column="0" Text="Litros gastos:" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="lblLitrosMisto" Text="0,00 L" HorizontalOptions="End" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
-                        <Label Grid.Row="1" Grid.Column="0" Text="Gasto combustível:"/>
-                        <Label Grid.Row="1" Grid.Column="1" x:Name="lblGastoMisto" Text="R$ 0,00" HorizontalOptions="End"/>
+                        <Label Grid.Row="1" Grid.Column="0" Text="Gasto combustível:" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="lblGastoMisto" Text="R$ 0,00" HorizontalOptions="End" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
-                        <Label Grid.Row="2" Grid.Column="0" Text="Lucro / Resultado:" FontAttributes="Bold"/>
-                        <Label Grid.Row="2" Grid.Column="1" x:Name="lblLucroMisto" Text="R$ 0,00" FontAttributes="Bold" TextColor="Green" HorizontalOptions="End"/>
+                        <Label Grid.Row="2" Grid.Column="0" Text="Lucro / Resultado:" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="lblLucroMisto" Text="R$ 0,00" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Green, Dark=#2ECC71}" HorizontalOptions="End"/>
                     </Grid>
                 </VerticalStackLayout>
 
                 <!-- Cenário Rodoviário -->
-                <VerticalStackLayout Spacing="5" BackgroundColor="#F1F3F5" Padding="12" Margin="0,5,0,0">
+                <VerticalStackLayout Spacing="5" 
+                                     BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#1E1E1E}" 
+                                     Padding="12" 
+                                     Margin="0,5,0,0">
                     <VerticalStackLayout.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnCenarioRodoviarioTapped" />
                     </VerticalStackLayout.GestureRecognizers>
-                    <Label Text="✅ 🛤️ Rodoviário (Estrada)" FontAttributes="Bold"/>
+                    <Label Text="✅ 🛤️ Rodoviário (Estrada)" 
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto">
-                        <Label Grid.Row="0" Grid.Column="0" Text="Litros gastos:"/>
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="lblLitrosRodoviario" Text="0,00 L" HorizontalOptions="End"/>
+                        <Label Grid.Row="0" Grid.Column="0" Text="Litros gastos:" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="lblLitrosRodoviario" Text="0,00 L" HorizontalOptions="End" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
-                        <Label Grid.Row="1" Grid.Column="0" Text="Gasto combustível:"/>
-                        <Label Grid.Row="1" Grid.Column="1" x:Name="lblGastoRodoviario" Text="R$ 0,00" HorizontalOptions="End"/>
+                        <Label Grid.Row="1" Grid.Column="0" Text="Gasto combustível:" TextColor="{AppThemeBinding Light=#495057, Dark=#CCCCCC}"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="lblGastoRodoviario" Text="R$ 0,00" HorizontalOptions="End" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
 
-                        <Label Grid.Row="2" Grid.Column="0" Text="Lucro / Resultado:" FontAttributes="Bold"/>
-                        <Label Grid.Row="2" Grid.Column="1" x:Name="lblLucroRodoviario" Text="R$ 0,00" FontAttributes="Bold" TextColor="Green" HorizontalOptions="End"/>
+                        <Label Grid.Row="2" Grid.Column="0" Text="Lucro / Resultado:" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="lblLucroRodoviario" Text="R$ 0,00" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Green, Dark=#2ECC71}" HorizontalOptions="End"/>
                     </Grid>
                 </VerticalStackLayout>
 

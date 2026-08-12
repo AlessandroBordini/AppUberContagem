@@ -2,13 +2,22 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppUberContagem.MetaPage"
-             Title="Minhas Metas">
+             Title="Minhas Metas"
+             BackgroundColor="{AppThemeBinding Light=White, Dark=#121212}">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
-            <Label Text="🎯 Metas" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center"/>
-            <Label Text="Acompanhe o seu progresso diário" FontSize="14" TextColor="Gray" HorizontalOptions="Center" Margin="0,-15,0,10"/>
+            <Label Text="🎯 Metas" 
+                   FontSize="28" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
+            <Label Text="Acompanhe o seu progresso diário" 
+                   FontSize="14" 
+                   TextColor="{AppThemeBinding Light=Gray, Dark=#A0A0A0}" 
+                   HorizontalOptions="Center" 
+                   Margin="0,-15,0,10"/>
 
             <!-- Botão para Criar Nova Meta -->
             <Button Text="+ Criar Nova Meta" 
@@ -23,12 +32,21 @@
             <CollectionView x:Name="cvMetas" Margin="0,5,0,0">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Margin="0,5" Padding="15" CornerRadius="12" BackgroundColor="#F8F9FA" BorderColor="#DFDFDF" HasShadow="True">
+                        <Frame Margin="0,5" 
+                               Padding="15" 
+                               CornerRadius="12" 
+                               BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#1E1E1E}" 
+                               BorderColor="{AppThemeBinding Light=#DFDFDF, Dark=#333333}" 
+                               HasShadow="True">
                             <VerticalStackLayout Spacing="12">
 
                                 <!-- Cabeçalho da Meta (Nome e Botões de Editar/Excluir) -->
                                 <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
-                                    <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="18" TextColor="Black" VerticalOptions="Center"/>
+                                    <Label Text="{Binding Nome}" 
+                                           FontAttributes="Bold" 
+                                           FontSize="18" 
+                                           TextColor="{AppThemeBinding Light=Black, Dark=#FFFFFF}" 
+                                           VerticalOptions="Center"/>
 
                                     <Button Grid.Column="1" Text="✏️" 
                                             CommandParameter="{Binding Id}" 
@@ -46,13 +64,27 @@
                                 </Grid>
 
                                 <!-- Barra de Progresso maior e mais visível -->
-                                <ProgressBar Progress="{Binding Progresso}" ProgressColor="#28A745" HeightRequest="15"/>
+                                <ProgressBar Progress="{Binding Progresso}" 
+                                             ProgressColor="#28A745" 
+                                             BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
+                                             HeightRequest="15"/>
 
                                 <!-- Textos do Progresso -->
                                 <HorizontalStackLayout Spacing="5" HorizontalOptions="Center">
-                                    <Label Text="{Binding GanhosFormatados}" FontSize="18" FontAttributes="Bold" TextColor="#28A745" VerticalOptions="End"/>
-                                    <Label Text="/" FontSize="16" TextColor="Gray" VerticalOptions="End"/>
-                                    <Label Text="{Binding AlvoFormatado}" FontSize="16" FontAttributes="Bold" TextColor="Gray" VerticalOptions="End"/>
+                                    <Label Text="{Binding GanhosFormatados}" 
+                                           FontSize="18" 
+                                           FontAttributes="Bold" 
+                                           TextColor="{AppThemeBinding Light=#28A745, Dark=#2ECC71}" 
+                                           VerticalOptions="End"/>
+                                    <Label Text="/" 
+                                           FontSize="16" 
+                                           TextColor="{AppThemeBinding Light=Gray, Dark=#A0A0A0}" 
+                                           VerticalOptions="End"/>
+                                    <Label Text="{Binding AlvoFormatado}" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold" 
+                                           TextColor="{AppThemeBinding Light=Gray, Dark=#A0A0A0}" 
+                                           VerticalOptions="End"/>
                                 </HorizontalStackLayout>
 
                             </VerticalStackLayout>
