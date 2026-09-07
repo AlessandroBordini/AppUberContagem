@@ -2,174 +2,162 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
-             xmlns:services="clr-namespace:AppUberContagem.Services"
-             xmlns:helpers="clr-namespace:AppUberContagem.Helpers"
              x:Class="AppUberContagem.CombustivelPage"
-             Title="Combustível"
-             BackgroundColor="{AppThemeBinding Light=White, Dark=#121212}">
+             Title="Abastecimento">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="*, Auto">
 
-        <!-- Área de Configuração -->
         <ScrollView Grid.Row="0">
-            <VerticalStackLayout Padding="20" Spacing="15">
-                <Label Text="⛽ Configuração" 
-                       FontSize="28" 
+            <VerticalStackLayout Spacing="15" Padding="20">
+
+                <Label Text="Registro de Abastecimento" 
+                       FontSize="22" 
                        FontAttributes="Bold" 
-                       HorizontalOptions="Center"
-                       TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
+                       HorizontalOptions="Center" />
 
-                <Label Text="Tipo de Veículo" 
-                       FontAttributes="Bold"
-                       TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
-                <Picker x:Name="pckTipoVeiculo" 
-                        SelectedIndex="0"
-                        SelectedIndexChanged="PckTipoVeiculo_SelectedIndexChanged"
-                        BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#1E1E1E}"
-                        TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
-                        TitleColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Combustível (Gasolina/Álcool)</x:String>
-                            <x:String>Elétrico</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
-
-                <!-- Seção de Combustível (Gasolina/Álcool) -->
-                <VerticalStackLayout x:Name="vslSecaoCombustivel" Spacing="15">
-                    <Label Text="Combustível em uso" 
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
-
-                    <HorizontalStackLayout Spacing="30">
-                        <RadioButton x:Name="rbGasolina" 
-                                     Content="Gasolina" 
-                                     GroupName="Combustivel" 
-                                     IsChecked="True" 
-                                     CheckedChanged="RbCombustivel_CheckedChanged"
-                                     TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
-                        <RadioButton x:Name="rbAlcool" 
-                                     Content="Álcool" 
-                                     GroupName="Combustivel" 
-                                     CheckedChanged="RbCombustivel_CheckedChanged"
-                                     TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"/>
-                    </HorizontalStackLayout>
-
-                    <Label x:Name="lblKmGasolina" 
-                           Text="Consumo na Gasolina (Km/L)" 
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
-                    <Entry x:Name="txtKmGasolina" 
-                           Placeholder="Ex.: 12,5" 
-                           Keyboard="Telephone"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
-                           PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
-                        <Entry.Behaviors>
-                            <helpers:EntradaNumeroRealBehavior />
-                        </Entry.Behaviors>
-                    </Entry>
-
-                    <Label x:Name="lblKmAlcool" 
-                           Text="Consumo no Álcool (Km/L)" 
-                           FontAttributes="Bold" 
-                           IsVisible="False"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
-                    <Entry x:Name="txtKmAlcool" 
-                           Placeholder="Ex.: 8,7" 
-                           Keyboard="Telephone" 
-                           IsVisible="False"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
-                           PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
-                        <Entry.Behaviors>
-                            <helpers:EntradaNumeroRealBehavior />
-                        </Entry.Behaviors>
-                    </Entry>
-
-                    <Label x:Name="lblPrecoGasolina" 
-                           Text="Preço do litro da Gasolina" 
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
-                    <Entry x:Name="txtPrecoGasolina" 
-                           Placeholder="Ex.: 6,39" 
-                           Keyboard="Telephone"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
-                           PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
-                        <Entry.Behaviors>
-                            <helpers:EntradaNumeroRealBehavior />
-                        </Entry.Behaviors>
-                    </Entry>
-
-                    <Label x:Name="lblPrecoAlcool" 
-                           Text="Preço do litro do Álcool" 
-                           FontAttributes="Bold" 
-                           IsVisible="False"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
-                    <Entry x:Name="txtPrecoAlcool" 
-                           Placeholder="Ex.: 4,49" 
-                           Keyboard="Telephone" 
-                           IsVisible="False"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
-                           PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
-                        <Entry.Behaviors>
-                            <helpers:EntradaNumeroRealBehavior />
-                        </Entry.Behaviors>
-                    </Entry>
+                <!-- SELETOR DE MODO (Simples vs Completo ⭐) - Começa sem seleção prévia -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Modo de Cálculo:" FontAttributes="Bold" />
+                    <Picker x:Name="pckModoCalculo" SelectedIndexChanged="PckModoCalculo_SelectedIndexChanged">
+                        <Picker.Items>
+                            <x:String>Modo Simples (Livre)</x:String>
+                            <x:String>Modo Completo / Tanque (Premium ⭐)</x:String>
+                        </Picker.Items>
+                    </Picker>
                 </VerticalStackLayout>
 
-                <!-- Seção de Elétrico -->
-                <VerticalStackLayout x:Name="vslSecaoEletrico" IsVisible="False" Spacing="15">
-                    <Label Text="Quanto custa a carga completa (R$)" 
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
-                    <Entry x:Name="txtPrecoCarga" 
-                           Placeholder="Ex.: 30,00" 
-                           Keyboard="Telephone"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
-                           PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
-                        <Entry.Behaviors>
-                            <helpers:EntradaNumeroRealBehavior />
-                        </Entry.Behaviors>
-                    </Entry>
+                <BoxView HeightRequest="1" Color="#E0E0E0" Margin="0,5" />
 
-                    <Label Text="Quantos KM roda com carga cheia (Km)" 
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#E0E0E0}"/>
-                    <Entry x:Name="txtAutonomiaCarga" 
-                           Placeholder="Ex.: 300" 
-                           Keyboard="Telephone"
-                           TextColor="{AppThemeBinding Light=#212529, Dark=#FFFFFF}"
-                           PlaceholderColor="{AppThemeBinding Light=#6C757D, Dark=#A0A0A0}">
-                        <Entry.Behaviors>
-                            <helpers:EntradaNumeroRealBehavior />
-                        </Entry.Behaviors>
-                    </Entry>
+                <!-- ================= MODO SIMPLES ================= -->
+                <VerticalStackLayout x:Name="vslModoSimplesContainer" Spacing="15">
+
+                    <!-- SEÇÃO PARA VEÍCULOS A COMBUSTÃO -->
+                    <VerticalStackLayout x:Name="vslCombustaoContainer" Spacing="15">
+
+                        <Label Text="Escolha o Combustível:" FontAttributes="Bold" />
+                        <HorizontalStackLayout Spacing="20">
+                            <RadioButton x:Name="rbGasolina" Content="Gasolina" CheckedChanged="RbCombustivel_CheckedChanged" />
+                            <RadioButton x:Name="rbAlcool" Content="Álcool" CheckedChanged="RbCombustivel_CheckedChanged" />
+                        </HorizontalStackLayout>
+
+                        <Label x:Name="lblPrecoCombustivel" Text="Preço do Litro (R$):" FontAttributes="Bold" />
+                        <Entry x:Name="txtPrecoLitroSimples" Placeholder="Ex: 5.89" Keyboard="Numeric" />
+
+                    </VerticalStackLayout>
+
+                    <!-- SEÇÃO PARA VEÍCULOS ELÉTRICOS -->
+                    <VerticalStackLayout x:Name="vslEletricoContainer" Spacing="15" IsVisible="False">
+
+                        <Label Text="Recarga do Veículo Elétrico:" FontAttributes="Bold" />
+                        <Label Text="Valor Total Pago para Carga Completa (R$):" />
+                        <Entry x:Name="txtPrecoCarga" Placeholder="Ex: 45.00" Keyboard="Numeric" />
+
+                    </VerticalStackLayout>
+
+                    <!-- Botão Registrar (Modo Simples) -->
+                    <Button Text="Registrar Abastecimento (Simples)" 
+                            Clicked="BtnRegistrar_Clicked" 
+                            BackgroundColor="Purple" 
+                            TextColor="White" 
+                            Margin="0, 10, 0, 0" />
+
                 </VerticalStackLayout>
 
-                <Button x:Name="btnSalvar" 
-                        Text="Salvar Configuração" 
-                        Clicked="BtnSalvar_Clicked" 
-                        BackgroundColor="#007BFF" 
-                        TextColor="White" 
-                        CornerRadius="8" 
-                        HeightRequest="50"/>
+                <!-- ================= MODO COMPLETO (PREMIUM) ================= -->
+                <VerticalStackLayout x:Name="vslModoCompletoContainer" Spacing="15" IsVisible="False">
 
-                <Button x:Name="btnLimpar" 
-                        Text="Limpar Tudo" 
-                        BackgroundColor="#DC3545" 
-                        TextColor="White" 
-                        CornerRadius="8" 
-                        HeightRequest="50" 
-                        Clicked="BtnLimpar_Clicked"/>
+                    <Frame BackgroundColor="{AppThemeBinding Light=#E8F4FD, Dark=#1A2634}" 
+                           BorderColor="{AppThemeBinding Light=#BDE0FE, Dark=#2A3B4C}" 
+                           Padding="15" 
+                           CornerRadius="12">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="⛽ Controle de Tanque (Premium ⭐)" FontAttributes="Bold" FontSize="16" TextColor="{AppThemeBinding Light=#007BFF, Dark=#3399FF}" />
+
+                            <!-- Barra de Nível do Tanque (Simulação Visual) -->
+                            <VerticalStackLayout Spacing="5">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Label Grid.Column="0" Text="Nível Estimado do Tanque" FontAttributes="Bold" FontSize="13" />
+                                    <Label Grid.Column="1" x:Name="lblPercentualTanque" Text="100%" FontAttributes="Bold" FontSize="13" TextColor="Green" />
+                                </Grid>
+
+                                <!-- Fundo da barra -->
+                                <Grid HeightRequest="22" BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#333333}">
+                                    <!-- Preenchimento dinâmico da barra -->
+                                    <BoxView x:Name="barNivelTanque" 
+                                             BackgroundColor="#2ECC71" 
+                                             HorizontalOptions="Start" 
+                                             WidthRequest="250" />
+                                    <!-- Texto indicativo interno -->
+                                    <Label x:Name="lblStatusTanqueTexto" 
+                                           Text="Tanque Cheio" 
+                                           FontSize="11" 
+                                           FontAttributes="Bold" 
+                                           TextColor="Black" 
+                                           HorizontalOptions="Center" 
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </VerticalStackLayout>
+
+                            <!-- Estado Inicial Aproximado (Caso queira reajustar) -->
+                            <Label Text="Nível Inicial Aproximado:" FontSize="12" FontAttributes="Bold" Margin="0,5,0,0" />
+                            <Picker x:Name="pckNivelInicial" SelectedIndexChanged="PckNivelInicial_SelectedIndexChanged">
+                                <Picker.Items>
+                                    <x:String>Tanque Cheio (100%)</x:String>
+                                    <x:String>3/4 do Tanque (75%)</x:String>
+                                    <x:String>Meio Tanque (50%)</x:String>
+                                    <x:String>1/4 do Tanque (25%)</x:String>
+                                    <x:String>Na Reserva (10%)</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Formulário de Abastecimento Real -->
+                    <VerticalStackLayout Spacing="12" BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#1E1E1E}" Padding="15">
+                        <Label Text="Novo Abastecimento" FontAttributes="Bold" FontSize="15" />
+
+                        <Label Text="Forma de Entrada:" FontSize="12" />
+                        <Picker x:Name="pckTipoEntradaAbastecimento" SelectedIndexChanged="PckTipoEntradaAbastecimento_SelectedIndexChanged">
+                            <Picker.Items>
+                                <x:String>Litros + Preço do Litro</x:String>
+                                <x:String>Preço do Litro + Valor Pago (Dinheiro/Cartão)</x:String>
+                            </Picker.Items>
+                        </Picker>
+
+                        <!-- Campos Dinâmicos de acordo com a forma de entrada -->
+                        <Label x:Name="lblCampo1" Text="Quantidade de Litros Colocados:" FontSize="12" />
+                        <Entry x:Name="txtValor1" Placeholder="Ex: 20,5" Keyboard="Numeric" TextChanged="CalculadoraAbastecimento_Changed" />
+
+                        <Label x:Name="lblCampo2" Text="Preço do Litro (R$):" FontSize="12" />
+                        <Entry x:Name="txtValor2" Placeholder="Ex: 5,89" Keyboard="Numeric" TextChanged="CalculadoraAbastecimento_Changed" />
+
+                        <!-- Resumo do Cálculo do Abastecimento Atual -->
+                        <Frame BackgroundColor="{AppThemeBinding Light=#E2E3E5, Dark=#2A2A2A}" Padding="10" CornerRadius="6">
+                            <VerticalStackLayout Spacing="3">
+                                <Label x:Name="lblResumoLitros" Text="Litros adicionados: 0,00 L" FontSize="13" />
+                                <Label x:Name="lblResumoTotal" Text="Total a pagar / Gasto: R$ 0,00" FontAttributes="Bold" FontSize="14" TextColor="{AppThemeBinding Light=#212529, Dark=#2ECC71}" />
+                            </VerticalStackLayout>
+                        </Frame>
+
+                        <!-- Botão Registrar Abastecimento Completo -->
+                        <Button Text="Registrar Abastecimento no Financeiro ⭐" 
+                                Clicked="BtnRegistrarCompleto_Clicked" 
+                                BackgroundColor="#28A745" 
+                                TextColor="White" 
+                                FontAttributes="Bold"
+                                Margin="0,5,0,0" />
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Banner AdMob fixo na parte inferior -->
-        <admob:BannerAd Grid.Row="1"
-                        x:Name="BottomBanner"
-                        AdUnitId="{x:Static services:AdMobIds.BannerAdUnitId}"
-                        AdSize="Banner"
-                        HorizontalOptions="Fill"
-                        OnAdFailedToLoad="OnBannerFailedToLoad" />
+        <!-- BANNER DO ADMOB -->
+        <admob:BannerAd x:Name="BottomBanner"
+                        Grid.Row="1"
+                        AdUnitId="ca-app-pub-3940256099942544/6300978111" 
+                        IsVisible="False" />
+
     </Grid>
 </ContentPage>

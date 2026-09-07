@@ -85,33 +85,113 @@ public partial class RelatorioPage : ContentPage
 
     private async void OnDataFiltroChanged(object sender, DateChangedEventArgs e) => await CarregarDadosFinanceiros();
 
-    // --- CADASTRO MANUAL (SEGURO) ---
+    // --- CADASTRO MANUAL E ABASTECIMENTO (SEGURO) ---
     private async void BtnNovoLancamento_Clicked(object sender, EventArgs e)
     {
-        string tipoEscolha = await DisplayActionSheet("Novo Lançamento", "Cancelar", null, "Ganho (Adição)", "Gasto (Subtração)");
+        string tipoEscolha = await DisplayActionSheet("Novo Lançamento", "Cancelar", null, "Ganho (Adição)", "Gasto (Subtração)", "Abastecimento ⛽");
         if (string.IsNullOrEmpty(tipoEscolha) || tipoEscolha == "Cancelar") return;
+
+        if (tipoEscolha.Contains("Abastecimento"))
+        {
+            string valorStr = await DisplayPromptAsyncSeguro("Abastecimento", "Quanto gastou em R$?", "0.00", Keyboard.Telephone);
+            if (string.IsNullOrWhiteSpace(valorStr)) return;
+
+            string litrosStr = await DisplayPromptAsyncSeguro("Abastecimento", "Quantos litros colocou?", "0.00", Keyboard.Telephone);
+            if (string.IsNullOrWhiteSpace(litrosStr)) return;
+
+            string dataStr = await DisplayPromptAsyncSeguro("Abastecimento", "Data (DD/MM/AAAA):", DateTime.Today.ToString("dd/MM/yyyy"));
+            if (string.IsNullOrWhiteSpace(dataStr)) return;
+
+            if (!DateTime.TryParseExact(dataStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataLancamento))
+            {
+                await DisplayAlert("Erro", "Formato de data inválido.", "OK");
+                return;
+            }
+
+            if (double.TryParse(valorStr.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double valorPago) &&
+                double.TryParse(litrosStr.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double litrosAbastecidos) &&
+                litrosAbastecidos > 0)
+            {
+                // 1. Salva o abastecimento como Gasto financeiro no banco de dados
+                var dbService = Handler?.MauiContext?.Services.GetService<Services.DatabaseService>();
+                if (dbService != null)
+                {
+                    await dbService.SalvarRegistroAsync(new Models.RegistroFinanceiro
+                    {
+                        TipoMovimentacao = "Gasto",
+                        Categoria = "Combustível",
+                        Descricao = $"Abastecimento ({litrosAbastecidos:F2} L)",
+                        Valor = valorPago,
+                        Data = dataLancamento
+                    });
+                }
+
+                // 2. Se o Modo Completo (Controle de Tanque) estiver ativo, atualiza os litros e preço médio
+                int modoIndex = Preferences.Default.Get("ModoCalculoIndex", 0);
+                if (modoIndex == 1)
+                {
+                    double capacidadeTanque = 50;
+                    string capStr = Preferences.Default.Get("CapacidadeTanque", "50");
+                    double.TryParse(capStr.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out capacidadeTanque);
+
+                    double litrosAtuais = Preferences.Default.Get("LitrosAtuaisNoTanque", 0.0);
+                    double precoMedioAntigo = Preferences.Default.Get("PrecoMedioTanque", 0.0);
+
+                    double precoLitroAtual = valorPago / litrosAbastecidos;
+                    double novosLitros = litrosAtuais + litrosAbastecidos;
+                    if (novosLitros > capacidadeTanque && capacidadeTanque > 0)
+                    {
+                        novosLitros = capacidadeTanque;
+                    }
+
+                    double novoPrecoMedio = precoLitroAtual;
+                    if (litrosAtuais > 0 && precoMedioAntigo > 0)
+                    {
+                        novoPrecoMedio = ((litrosAtuais * precoMedioAntigo) + valorPago) / (litrosAtuais + litrosAbastecidos);
+                    }
+
+                    Preferences.Default.Set("LitrosAtuaisNoTanque", novosLitros);
+                    Preferences.Default.Set("PrecoMedioTanque", novoPrecoMedio);
+
+                    string consumoMedioStr = Preferences.Default.Get("ConsumoMedioCompleto", "10");
+                    if (double.TryParse(consumoMedioStr.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double consumoMedio) && consumoMedio > 0)
+                    {
+                        double custoPorKm = novoPrecoMedio / consumoMedio;
+                        Preferences.Default.Set("CustoPorKm", custoPorKm);
+                    }
+                }
+
+                await CarregarDadosFinanceiros();
+                await DisplayAlert("Sucesso", "Abastecimento registrado e tanque atualizado!", "OK");
+            }
+            else
+            {
+                await DisplayAlert("Erro", "Valores numéricos inválidos.", "OK");
+            }
+            return;
+        }
 
         string tipoMovimentacao = tipoEscolha.Contains("Ganho") ? "Ganho" : "Gasto";
 
         string descricao = await DisplayPromptAsyncSeguro("Descrição", "O que é esse lançamento?", "Ex: Troca de óleo");
         if (string.IsNullOrWhiteSpace(descricao)) return;
 
-        string valorStr = await DisplayPromptAsyncSeguro("Valor", "Digite o valor em R$:", "0.00", Keyboard.Telephone);
-        if (string.IsNullOrWhiteSpace(valorStr)) return;
+        string valorStrManual = await DisplayPromptAsyncSeguro("Valor", "Digite o valor em R$:", "0.00", Keyboard.Telephone);
+        if (string.IsNullOrWhiteSpace(valorStrManual)) return;
 
-        string dataStr = await DisplayPromptAsyncSeguro("Data", "Data (DD/MM/AAAA):", DateTime.Today.ToString("dd/MM/yyyy"));
-        if (string.IsNullOrWhiteSpace(dataStr)) return;
+        string dataStrManual = await DisplayPromptAsyncSeguro("Data", "Data (DD/MM/AAAA):", DateTime.Today.ToString("dd/MM/yyyy"));
+        if (string.IsNullOrWhiteSpace(dataStrManual)) return;
 
-        if (!DateTime.TryParseExact(dataStr, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataLancamento))
+        if (!DateTime.TryParseExact(dataStrManual, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataLancamentoManual))
         {
             await DisplayAlert("Erro", "Formato de data inválido.", "OK");
             return;
         }
 
-        if (double.TryParse(valorStr.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double valor))
+        if (double.TryParse(valorStrManual.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double valorManual))
         {
             var dbService = Handler?.MauiContext?.Services.GetService<Services.DatabaseService>();
-            await dbService.SalvarRegistroAsync(new Models.RegistroFinanceiro { TipoMovimentacao = tipoMovimentacao, Categoria = "Manual", Descricao = descricao, Valor = valor, Data = dataLancamento });
+            await dbService.SalvarRegistroAsync(new Models.RegistroFinanceiro { TipoMovimentacao = tipoMovimentacao, Categoria = "Manual", Descricao = descricao, Valor = valorManual, Data = dataLancamentoManual });
             await CarregarDadosFinanceiros();
         }
     }
@@ -228,7 +308,7 @@ public partial class RelatorioPage : ContentPage
         }
     }
 
-    // --- POPUP SEGURO CORRIGIDO (AGORA COM BOTÃO DE SAIR) ---
+    // --- POPUP SEGURO CORRIGIDO (COM BOTÃO DE SAIR) ---
     private async Task<string?> DisplayPromptAsyncSeguro(string titulo, string mensagem, string valorInicial = "", Keyboard? teclado = null)
     {
         var entry = new Entry
@@ -242,7 +322,6 @@ public partial class RelatorioPage : ContentPage
 
         var tcs = new TaskCompletionSource<string?>();
 
-        // Botão de Confirmar Original
         var btnSalvar = new Button
         {
             Text = "Confirmar",
@@ -258,7 +337,6 @@ public partial class RelatorioPage : ContentPage
             tcs.SetResult(res);
         };
 
-        // Novo Botão de Cancelar (Fica ao lado do Confirmar)
         var btnCancelar = new Button
         {
             Text = "Cancelar",
@@ -270,10 +348,9 @@ public partial class RelatorioPage : ContentPage
         btnCancelar.Clicked += async (s, args) =>
         {
             await Navigation.PopModalAsync();
-            tcs.SetResult(null); // Retorna nulo para indicar o cancelamento
+            tcs.SetResult(null);
         };
 
-        // Agrupando os botões de Cancelar e Confirmar lado a lado
         var gridBotoes = new Grid
         {
             ColumnDefinitions = { new ColumnDefinition { Width = GridLength.Star }, new ColumnDefinition { Width = GridLength.Star } },
@@ -282,7 +359,6 @@ public partial class RelatorioPage : ContentPage
         gridBotoes.Add(btnCancelar, 0, 0);
         gridBotoes.Add(btnSalvar, 1, 0);
 
-        // Novo botão de Fechar (Um "X" no canto superior direito)
         var btnFecharCanto = new Button
         {
             Text = "❌",
@@ -296,10 +372,9 @@ public partial class RelatorioPage : ContentPage
         btnFecharCanto.Clicked += async (s, args) =>
         {
             await Navigation.PopModalAsync();
-            tcs.SetResult(null); // Retorna nulo para indicar o cancelamento
+            tcs.SetResult(null);
         };
 
-        // Layout Principal do Popup
         var layoutPrincipal = new VerticalStackLayout
         {
             Padding = 20,
@@ -310,7 +385,7 @@ public partial class RelatorioPage : ContentPage
                 new Label { Text = titulo, FontSize = 22, FontAttributes = FontAttributes.Bold, HorizontalOptions = LayoutOptions.Center },
                 new Label { Text = mensagem, TextColor = Colors.Gray, FontSize = 14 },
                 entry,
-                gridBotoes // Adiciona os dois botões (Cancelar e Confirmar)
+                gridBotoes
             }
         };
 
@@ -322,8 +397,8 @@ public partial class RelatorioPage : ContentPage
             {
                 Children =
                 {
-                    layoutPrincipal, // O conteúdo no centro
-                    btnFecharCanto   // O "X" no canto
+                    layoutPrincipal,
+                    btnFecharCanto
                 }
             }
         };
@@ -344,7 +419,7 @@ public partial class RelatorioPage : ContentPage
         DateTime dataFim = dtpFim.Date.HasValue ? dtpFim.Date.Value.Date.AddDays(1).AddSeconds(-1) : DateTime.Today;
 
         _listaFiltrada = listaRegistros
-            .Where(r => r.Data.Date >= dataInicio.Date && r.Data.Date <= dataFim.Date)
+            .Where(r => r.Data >= dataInicio && r.Data <= dataFim)
             .OrderByDescending(r => r.Data)
             .ToList();
 

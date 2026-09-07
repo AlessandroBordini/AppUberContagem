@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
+             x:Class="AppUberContagem.VeiculoPage"
+             Title="Meu Veículo">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="15" Padding="20">
+
+                <Label Text="Configurações do Veículo" 
+                       FontSize="22" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center" />
+
+                <!-- Tipo de Veículo -->
+                <Label Text="Tipo de Veículo:" FontAttributes="Bold" />
+                <Picker x:Name="pckTipoVeiculo" SelectedIndexChanged="PckTipoVeiculo_SelectedIndexChanged">
+                    <Picker.Items>
+                        <x:String>Combustão (Gasolina / Álcool)</x:String>
+                        <x:String>Elétrico</x:String>
+                    </Picker.Items>
+                </Picker>
+
+                <!-- Seção de Consumo para Combustão -->
+                <VerticalStackLayout x:Name="vslConsumoCombustao" Spacing="10">
+                    <Label Text="Rendimento (Km por Litro):" FontAttributes="Bold" />
+
+                    <Label Text="Média com Gasolina:" />
+                    <Entry x:Name="txtKmGasolina" Placeholder="Ex: 12.5" Keyboard="Numeric" />
+
+                    <Label Text="Média com Álcool:" />
+                    <Entry x:Name="txtKmAlcool" Placeholder="Ex: 9.0" Keyboard="Numeric" />
+
+                    <Label Text="Capacidade Total do Tanque (Litros):" FontAttributes="Bold" Margin="0,5,0,0" />
+                    <Entry x:Name="txtCapacidadeTanque" Placeholder="Ex: 50" Keyboard="Numeric" />
+                </VerticalStackLayout>
+
+                <!-- Seção de Consumo para Elétrico -->
+                <VerticalStackLayout x:Name="vslConsumoEletrico" Spacing="10" IsVisible="False">
+                    <Label Text="Autonomia por Carga Completa (Km):" FontAttributes="Bold" />
+                    <Entry x:Name="txtAutonomiaCarga" Placeholder="Ex: 300" Keyboard="Numeric" />
+                </VerticalStackLayout>
+
+                <!-- Botão Salvar -->
+                <Button Text="Salvar Configurações" 
+                        Clicked="BtnSalvarVeiculo_Clicked" 
+                        BackgroundColor="Purple" 
+                        TextColor="White" 
+                        Margin="0, 20, 0, 0" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <admob:BannerAd x:Name="BottomBanner"
+                        Grid.Row="1"
+                        AdUnitId="ca-app-pub-3940256099942544/6300978111" 
+                        IsVisible="False" />
+
+    </Grid>
+</ContentPage>

@@ -13,6 +13,7 @@ public partial class MainPage : ContentPage
     private double _gastoMistoCalculado;
     private double _gastoRodoviarioCalculado;
     private bool _corridaFoiCalculada = false;
+    private bool _isRedirecting = false;
 
     public MainPage()
     {
@@ -23,32 +24,107 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
 
+        if (_isRedirecting) return;
+
         // Utiliza o PremiumHelper seguro
         bool isPremium = await PremiumHelper.IsPremiumAsync();
         BottomBanner.IsVisible = !isPremium;
 
-        // Verifica se precisa exibir o aviso de combustível
-        VerificarConfiguracaoCombustivel();
+        // Valida se as configurações iniciais existem através de pop-ups bloqueantes
+        await VerificarConfiguracoesIniciaisAsync();
     }
 
-    private void VerificarConfiguracaoCombustivel()
+    private async Task VerificarConfiguracoesIniciaisAsync()
     {
-        bool usaGasolina = Preferences.Default.Get("UsaGasolina", true);
-        string strKmGas = Preferences.Default.Get("KmGasolina", "0");
-        string strKmAlc = Preferences.Default.Get("KmAlcool", "0");
-        string strPrecoGas = Preferences.Default.Get("PrecoGasolina", "0");
-        string strPrecoAlc = Preferences.Default.Get("PrecoAlcool", "0");
+        // 1. Verifica se o tipo de veículo foi definido
+        int tipoVeiculo = Preferences.Default.Get("TipoVeiculoIndex", -1);
+        if (tipoVeiculo == -1)
+        {
+            await ExibirAlertaRedirecionamentoAsync(
+                "Configuração Inicial 🚗",
+                "Você ainda não configurou o seu veículo. Cadastre as informações para prosseguir.",
+                typeof(VeiculoPage)
+            );
+            return;
+        }
 
-        double.TryParse(strKmGas.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double kmGas);
-        double.TryParse(strKmAlc.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double kmAlc);
-        double.TryParse(strPrecoGas.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double precoGas);
-        double.TryParse(strPrecoAlc.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double precoAlc);
+        // 2. Valida conforme o tipo de veículo
+        if (tipoVeiculo == 0) // Combustão
+        {
+            bool usaGasolina = Preferences.Default.Get("UsaGasolina", true);
+            string strKmGas = Preferences.Default.Get("KmGasolina", "0");
+            string strKmAlc = Preferences.Default.Get("KmAlcool", "0");
+            string strPrecoGas = Preferences.Default.Get("PrecoGasolina", "0");
+            string strPrecoAlc = Preferences.Default.Get("PrecoAlcool", "0");
 
-        double kmPorLitroBase = usaGasolina ? kmGas : kmAlc;
-        double precoLitro = usaGasolina ? precoGas : precoAlc;
+            double.TryParse(strKmGas.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double kmGas);
+            double.TryParse(strKmAlc.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double kmAlc);
+            double.TryParse(strPrecoGas.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double precoGas);
+            double.TryParse(strPrecoAlc.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double precoAlc);
 
-        // Mostra o aviso apenas se o Consumo (Km/L) OU o Preço do combustível atual estiver zerado
-        frmAvisoCombustivel.IsVisible = (kmPorLitroBase <= 0 || precoLitro <= 0);
+            double kmPorLitroBase = usaGasolina ? kmGas : kmAlc;
+            double precoLitro = usaGasolina ? precoGas : precoAlc;
+
+            if (kmPorLitroBase <= 0)
+            {
+                await ExibirAlertaRedirecionamentoAsync(
+                    "Rendimento Pendente ⛽",
+                    "Precisamos saber o rendimento (Km/L) do seu veículo para calcular os custos. Vá até a aba de veículo ou combustível para cadastrar.",
+                    typeof(VeiculoPage)
+                );
+                return;
+            }
+
+            if (precoLitro <= 0)
+            {
+                await ExibirAlertaRedirecionamentoAsync(
+                    "Preço do Combustível Ausente 💰",
+                    "O preço do combustível não foi informado. Cadastre para continuar.",
+                    typeof(CombustivelPage)
+                );
+                return;
+            }
+        }
+        else // Elétrico
+        {
+            string autonomiaStr = Preferences.Default.Get("AutonomiaCarga", "0");
+            string precoCargaStr = Preferences.Default.Get("PrecoCarga", "0");
+
+            double.TryParse(autonomiaStr.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double autonomia);
+            double.TryParse(precoCargaStr.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double precoCarga);
+
+            if (autonomia <= 0 || precoCarga <= 0)
+            {
+                await ExibirAlertaRedirecionamentoAsync(
+                    "Dados do Veículo Elétrico ⚡",
+                    "Faltam informações de autonomia ou preço da carga para prosseguir.",
+                    typeof(CombustivelPage)
+                );
+                return;
+            }
+        }
+    }
+
+    private async Task ExibirAlertaRedirecionamentoAsync(string titulo, string mensagem, Type paginaDestino)
+    {
+        _isRedirecting = true;
+
+        bool irParaCadastro = await DisplayAlert(
+            titulo,
+            mensagem,
+            "Cadastrar Agora",
+            "Cancelar"
+        );
+
+        if (irParaCadastro)
+        {
+            if (Activator.CreateInstance(paginaDestino) is Page pagina)
+            {
+                await Navigation.PushAsync(pagina);
+            }
+        }
+
+        _isRedirecting = false;
     }
 
     private async void BtnCalcular_Clicked(object sender, EventArgs e)
@@ -115,7 +191,7 @@ public partial class MainPage : ContentPage
         double gastoRodoviario = litrosRodoviario * precoLitro;
         double lucroRodoviario = valorCorrida - gastoRodoviario;
 
-        // 5. Exibe resultados na interface
+        // 5. Exibe resultados nos labels do Pop-up
         lblLitrosUrbano.Text = $"{litrosUrbano:F2} L";
         lblGastoUrbano.Text = $"R$ {gastoUrbano:F2}";
         lblLucroUrbano.Text = $"R$ {lucroUrbano:F2}";
@@ -137,6 +213,14 @@ public partial class MainPage : ContentPage
         _gastoMistoCalculado = gastoMisto;
         _gastoRodoviarioCalculado = gastoRodoviario;
         _corridaFoiCalculada = true;
+
+        // 7. Torna o Pop-up visível na tela
+        PopupCenarios.IsVisible = true;
+    }
+
+    private void BtnFecharPopup_Clicked(object sender, EventArgs e)
+    {
+        PopupCenarios.IsVisible = false;
     }
 
     private void BtnLimpar_Clicked(object sender, EventArgs e)
@@ -161,6 +245,7 @@ public partial class MainPage : ContentPage
         lblLucroRodoviario.TextColor = Colors.Green;
 
         _corridaFoiCalculada = false;
+        PopupCenarios.IsVisible = false;
     }
 
     private void OnBannerFailedToLoad(object? sender, IAdError e)
@@ -208,6 +293,7 @@ public partial class MainPage : ContentPage
             bool querAssinar = await DisplayAlert("Função Premium ⭐", "O registro automático de corridas para controle financeiro é uma função Premium. Deseja conhecer?", "Sim", "Agora não");
             if (querAssinar)
             {
+                PopupCenarios.IsVisible = false; // Fecha o pop-up ao redirecionar
                 await Navigation.PushAsync(new PremiumPage());
             }
             return;
@@ -236,6 +322,7 @@ public partial class MainPage : ContentPage
 
         await DisplayAlert("Sucesso! ✅", $"Corrida salva no seu relatório!\n\nGanho: R$ {_ganhoBrutoAtual:F2}\nGasto Combustível: R$ {gastoCombustivel:F2}", "OK");
 
+        PopupCenarios.IsVisible = false;
         BtnLimpar_Clicked(this, EventArgs.Empty);
     }
 }

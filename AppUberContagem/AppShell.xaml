@@ -11,22 +11,27 @@
         <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
     </FlyoutItem>
 
-    <!-- 2. Configuração de Combustível -->
+    <!-- 2. Configuração do Veículo (Gratuito) -->
+    <FlyoutItem Title="🚘 Meu Veículo" Route="VeiculoPage">
+        <ShellContent ContentTemplate="{DataTemplate local:VeiculoPage}" />
+    </FlyoutItem>
+
+    <!-- 3. Configuração de Combustível -->
     <FlyoutItem Title="⛽ Combustível" Route="CombustivelPage">
         <ShellContent ContentTemplate="{DataTemplate local:CombustivelPage}" />
     </FlyoutItem>
 
-    <!-- 3. Acompanhamento de Metas -->
+    <!-- 4. Acompanhamento de Metas -->
     <FlyoutItem x:Name="itemMetas" Title="🔒 Metas (PRO)" Route="MetaPage">
         <ShellContent ContentTemplate="{DataTemplate local:MetaPage}" />
     </FlyoutItem>
 
-    <!-- 4. Relatório Financeiro -->
+    <!-- 5. Relatório Financeiro -->
     <FlyoutItem x:Name="itemRelatorio" Title="🔒 Relatório Financeiro (PRO)" Route="RelatorioPage">
         <ShellContent ContentTemplate="{DataTemplate local:RelatorioPage}" />
     </FlyoutItem>
 
-    <!-- 5. Conversão para Premium (Destaque Visual) -->
+    <!-- 6. Conversão para Premium (Destaque Visual) -->
     <FlyoutItem Title="⭐ Seja Premium ⭐" Route="PremiumPage">
         <ShellContent ContentTemplate="{DataTemplate local:PremiumPage}" />
     </FlyoutItem>

@@ -121,5 +121,8 @@
 		<MauiXaml Update="SplashPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="VeiculoPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 </Project>
