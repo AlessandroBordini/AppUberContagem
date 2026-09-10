@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
+             x:Class="AppUberContagem.ViagensPage"
+             Title="Minhas Viagens e Rotas">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <Grid Grid.Row="0" RowDefinitions="Auto, *">
+
+            <VerticalStackLayout Grid.Row="0" Padding="15" Spacing="10">
+                <Button Text="+ Nova Viagem / Rota" 
+                        Clicked="BtnNovaViagem_Clicked" 
+                        BackgroundColor="Purple" 
+                        TextColor="White" 
+                        FontAttributes="Bold" />
+                <Label Text="Toque em uma viagem para gerenciar os trechos, pedágios e confirmações:" 
+                       FontSize="12" 
+                       TextColor="Gray" />
+            </VerticalStackLayout>
+
+            <!-- Removido SelectionMode e SelectionChanged, substituído por TapGestureRecognizer no Frame -->
+            <CollectionView x:Name="cvViagens" Grid.Row="1" Margin="10,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="5" Padding="15" CornerRadius="10" HasShadow="True" 
+                               BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+
+                            <!-- Gesto de toque direto no cartão da viagem -->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="CardViagem_Tapped" CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
+
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="18" />
+
+                                <Grid ColumnDefinitions="*, *" Margin="0,5,0,0">
+                                    <VerticalStackLayout Grid.Column="0">
+                                        <Label Text="Total Estimado:" FontSize="11" TextColor="Gray" />
+                                        <Label Text="{Binding ValorTotalEstimado, StringFormat='R$ {0:F2}'}" FontAttributes="Bold" FontSize="15" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1">
+                                        <Label Text="Subtotal Pendente:" FontSize="11" TextColor="Gray" />
+                                        <Label Text="{Binding SubtotalPendente, StringFormat='R$ {0:F2}'}" FontAttributes="Bold" FontSize="15" TextColor="Orange" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+
+        <admob:BannerAd x:Name="BottomBanner"
+                        Grid.Row="1"
+                        AdUnitId="ca-app-pub-3940256099942544/6300978111" 
+                        IsVisible="False" />
+
+    </Grid>
+</ContentPage>

@@ -11,29 +11,33 @@
         <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
     </FlyoutItem>
 
-    <!-- 2. Configuração do Veículo (Gratuito) -->
+    <!-- 2. Nova Aba: Viagens e Rotas -->
+    <FlyoutItem Title="🗺️ Viagens e Rotas" Route="ViagensPage">
+        <ShellContent ContentTemplate="{DataTemplate local:ViagensPage}" />
+    </FlyoutItem>
+
+    <!-- 3. Configuração do Veículo (Gratuito) -->
     <FlyoutItem Title="🚘 Meu Veículo" Route="VeiculoPage">
         <ShellContent ContentTemplate="{DataTemplate local:VeiculoPage}" />
     </FlyoutItem>
 
-    <!-- 3. Configuração de Combustível -->
+    <!-- 4. Configuração de Combustível -->
     <FlyoutItem Title="⛽ Combustível" Route="CombustivelPage">
         <ShellContent ContentTemplate="{DataTemplate local:CombustivelPage}" />
     </FlyoutItem>
 
-    <!-- 4. Acompanhamento de Metas -->
+    <!-- 5. Acompanhamento de Metas -->
     <FlyoutItem x:Name="itemMetas" Title="🔒 Metas (PRO)" Route="MetaPage">
         <ShellContent ContentTemplate="{DataTemplate local:MetaPage}" />
     </FlyoutItem>
 
-    <!-- 5. Relatório Financeiro -->
+    <!-- 6. Relatório Financeiro -->
     <FlyoutItem x:Name="itemRelatorio" Title="🔒 Relatório Financeiro (PRO)" Route="RelatorioPage">
         <ShellContent ContentTemplate="{DataTemplate local:RelatorioPage}" />
     </FlyoutItem>
 
-    <!-- 6. Conversão para Premium (Destaque Visual) -->
+    <!-- 7. Conversão para Premium (Destaque Visual) -->
     <FlyoutItem Title="⭐ Seja Premium ⭐" Route="PremiumPage">
         <ShellContent ContentTemplate="{DataTemplate local:PremiumPage}" />
     </FlyoutItem>
-
 </Shell>

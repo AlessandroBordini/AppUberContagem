@@ -34,7 +34,7 @@
 
                 <!-- Nome Principal do App (Alinhamento centralizado corrigido para quebras de linha) -->
                 <Label 
-                    Text="Calculadora de Corridas"
+                    Text="ContaRota"
                     FontSize="36"
                     FontAttributes="Bold"
                     TextColor="White"
@@ -43,7 +43,7 @@
 
                 <!-- Subtítulo descritivo -->
                 <Label 
-                    Text="Calculadora de Lucro de Corridas"
+                    Text="Calculadora de Lucro de Corridas e Gasto de Viagens"
                     FontSize="14"
                     TextColor="#AAAAAA"
                     HorizontalOptions="Center"
